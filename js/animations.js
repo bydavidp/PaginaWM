@@ -1,0 +1,1146 @@
+(function () {
+
+  /* ═══════════════════════════════════════
+     FUMIGACIONES MAGISTRAL — ANIMATIONS.JS
+     Animaciones temáticas con Anime.js + Intersection Observer
+     ═══════════════════════════════════════ */
+
+  /* ───────── helpers ───────── */
+  function el(sel) { return document.querySelector(sel); }
+  function els(sel) { return document.querySelectorAll(sel); }
+
+  function onVisibleEach(selector, cb, threshold = 0.15) {
+    const nodes = els(selector);
+    if (!nodes.length) return;
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          cb(entry.target);
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold });
+    nodes.forEach((n) => obs.observe(n));
+  }
+
+  /* ───────── Observe for CSS .animate elements ───────── */
+  function observeElements(selector, animationClass = 'visible', threshold = 0.15) {
+    const elements = document.querySelectorAll(selector);
+    if (!elements.length) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add(animationClass);
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold, rootMargin: '0px 0px -50px 0px' }
+    );
+    elements.forEach((el) => observer.observe(el));
+  }
+
+  /* ───────── 1. LOGO PULSE ───────── */
+  function logoPulse() {
+    const logoSvg = el('.nav__logo svg circle:first-child');
+    if (!logoSvg) return;
+    anime({
+      targets: logoSvg,
+      r: [18, 16, 18],
+      strokeOpacity: [1, 0.4, 1],
+      duration: 2500,
+      loop: true,
+      easing: 'easeInOutSine',
+    });
+  }
+
+  /* ───────── 2. HERO — NIEBLA DE FUMIGACIÓN DRAMÁTICA ───────── */
+  function heroFumigationFog() {
+    const hero = el('#hero');
+    if (!hero) return;
+
+    const canvas = document.createElement('canvas');
+    canvas.className = 'hero__particles';
+    canvas.ariaHidden = 'true';
+    canvas.style.zIndex = '10';
+    hero.appendChild(canvas);
+    const ctx = canvas.getContext('2d');
+
+    let w, h;
+    function resize() {
+      w = canvas.width = hero.offsetWidth;
+      h = canvas.height = hero.offsetHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    /* 400 partículas formando una nube densa en el centro */
+    const count = 400;
+    const particles = [];
+    const cx = w / 2, cy = h / 2;
+    const maxDist = Math.max(w, h) * 0.6;
+    for (let i = 0; i < count; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const dist = Math.random() * maxDist;
+      const outward = maxDist * 0.8 + Math.random() * maxDist * 0.5;
+      particles.push({
+        x: cx + Math.cos(angle) * dist,
+        y: cy + Math.sin(angle) * dist,
+        targetX: cx + Math.cos(angle) * outward,
+        targetY: cy + Math.sin(angle) * outward,
+        r: Math.random() * 7 + 3,
+        alpha: Math.random() * 0.5 + 0.4,
+        delay: Math.random() * 200,
+      });
+    }
+
+    let startTime = null;
+    const duration = 3500;
+
+    function draw(time) {
+      if (!startTime) startTime = time;
+      const elapsed = time - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      ctx.clearRect(0, 0, w, h);
+
+      particles.forEach((p) => {
+        if (elapsed < p.delay) {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(204, 0, 0, ${p.alpha * 0.6})`;
+          ctx.fill();
+          return;
+        }
+
+        const t = Math.min((elapsed - p.delay) / duration, 1);
+        const e = 1 - Math.pow(1 - t, 2.5);
+        const px = p.x + (p.targetX - p.x) * e;
+        const py = p.y + (p.targetY - p.y) * e;
+        const a = p.alpha * (1 - e);
+        const radius = p.r * (1 - e * 0.4);
+
+        if (a > 0.01) {
+          ctx.beginPath();
+          ctx.arc(px, py, radius, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(204, 0, 0, ${a})`;
+          ctx.fill();
+        }
+      });
+
+      if (progress >= 1) {
+        canvas.style.zIndex = '1';
+        anime({
+          targets: canvas,
+          opacity: [1, 0],
+          duration: 800,
+          easing: 'easeOutQuad',
+          complete: () => canvas.remove(),
+        });
+      } else {
+        requestAnimationFrame(draw);
+      }
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  /* ───────── 3. HERO TITLE — FADE-IN ESCALONADO (preserva HTML) ───────── */
+  function heroTextStagger() {
+    const title = el('.hero__title');
+    const subtitle = el('.hero__subtitle');
+    const badge = el('.hero__badge');
+    const actions = el('.hero__actions');
+
+    if (badge) badge.classList.remove('animate');
+    if (title) title.classList.remove('animate');
+    if (subtitle) subtitle.classList.remove('animate');
+    if (actions) actions.classList.remove('animate');
+
+    const timeline = anime.timeline({ easing: 'easeOutExpo' });
+
+    if (badge) {
+      timeline.add({
+        targets: badge,
+        opacity: [0, 1],
+        translateY: [20, 0],
+        duration: 800,
+      }, 0);
+    }
+
+    if (title) {
+      const words = [];
+      title.childNodes.forEach((node) => {
+        if (node.nodeType === 3) {
+          node.textContent.split(/\s+/).forEach(w => {
+            if (w) words.push({ text: w, tag: null });
+          });
+        } else if (node.nodeType === 1) {
+          const tag = node.tagName.toLowerCase();
+          node.textContent.split(/\s+/).forEach(w => {
+            if (w) words.push({ text: w, tag });
+          });
+        }
+      });
+      title.innerHTML = words.map(w => {
+        if (w.tag) return `<${w.tag} class="hero__word">${w.text}</${w.tag}>`;
+        return `<span class="hero__word">${w.text}</span>`;
+      }).join(' ');
+      timeline.add({
+        targets: '.hero__word',
+        opacity: [0, 1],
+        translateY: [30, 0],
+        duration: 500,
+        delay: anime.stagger(60),
+      }, 400);
+    }
+
+    if (subtitle) {
+      timeline.add({
+        targets: subtitle,
+        opacity: [0, 1],
+        translateY: [20, 0],
+        duration: 700,
+      }, 1200);
+    }
+
+    if (actions) {
+      timeline.add({
+        targets: actions.children,
+        opacity: [0, 1],
+        scale: [0.9, 1],
+        duration: 500,
+        delay: anime.stagger(150),
+      }, 1800);
+    }
+  }
+
+  /* ───────── 4. HERO VISUAL — APARICIÓN CON EFECTO ESCUDO ───────── */
+  function heroVisualReveal() {
+    const visual = el('.hero__visual');
+    if (!visual) return;
+    visual.classList.remove('animate--right');
+    anime({
+      targets: visual,
+      opacity: [0, 1],
+      scale: [0.8, 1],
+      duration: 1200,
+      delay: 600,
+      easing: 'easeOutElastic(1, .5)',
+    });
+  }
+
+  /* ───────── 5. CONTADORES CON REBOTE ELÁSTICO ───────── */
+  function counterElastic() {
+    onVisibleEach('.counter__number', (el) => {
+      const target = parseFloat(el.dataset.target) || 0;
+      const hasDecimal = target % 1 !== 0;
+      anime({
+        targets: el,
+        innerHTML: [0, target],
+        round: hasDecimal ? 1 : 0,
+        duration: 2500,
+        delay: 200,
+        easing: 'easeOutElastic(1, .6)',
+        update: (anim) => {
+          const val = anim.animations[0].currentValue;
+          el.textContent = hasDecimal ? parseFloat(val).toFixed(1) : Math.floor(val).toString();
+        },
+        complete: () => {
+          el.textContent = hasDecimal ? target.toFixed(1) : target.toString();
+          anime({
+            targets: el,
+            filter: ['brightness(2)', 'brightness(1)'],
+            duration: 600,
+            easing: 'easeOutQuad',
+          });
+          const rect = el.getBoundingClientRect();
+          burstConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2);
+        },
+      });
+    }, 0.4);
+  }
+
+  /* ───────── 6. SERVICE CARDS — STAGGER + HOVER WAVE ───────── */
+  function serviceCardsAnime() {
+    onVisible('.services-grid', (container) => {
+      const cards = container.querySelectorAll('.service-card');
+      cards.forEach(c => c.classList.remove('animate'));
+      anime({
+        targets: cards,
+        opacity: [0, 1],
+        translateY: [50, 0],
+        duration: 600,
+        delay: anime.stagger(120),
+        easing: 'easeOutQuad',
+      });
+    });
+
+    els('.service-card').forEach((card) => {
+      card.addEventListener('mouseenter', () => {
+        const icon = card.querySelector('.service-card__icon');
+        if (icon) {
+          anime({
+            targets: icon,
+            scale: [1, 1.2, 1],
+            rotate: [0, 15, -15, 0],
+            duration: 600,
+            easing: 'easeOutQuad',
+          });
+        }
+        anime({
+          targets: card,
+          boxShadow: [
+            '0 4px 12px rgba(0,0,0,0.1)',
+            '0 8px 40px rgba(204,0,0,0.3)',
+          ],
+          duration: 400,
+          easing: 'easeOutQuad',
+        });
+      });
+    });
+  }
+
+  function onVisible(selector, callback, threshold = 0.15) {
+    const nodes = els(selector);
+    if (!nodes.length) return;
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          callback(entry.target);
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold });
+    nodes.forEach((n) => obs.observe(n));
+  }
+
+  /* ───────── 7. BENEFIT ITEMS — ICONOS CON ROTACIÓN 3D ───────── */
+  function benefitIcons3d() {
+    els('.benefit-item').forEach((item) => {
+      item.addEventListener('mouseenter', () => {
+        const icon = item.querySelector('.benefit-item__icon');
+        if (!icon) return;
+        anime({
+          targets: icon,
+          rotateY: [0, 360],
+          scale: [1, 1.15, 1],
+          duration: 700,
+          easing: 'easeOutQuad',
+        });
+      });
+    });
+  }
+
+  /* ───────── 8. TESTIMONIALS — ESTRELLAS BRILLAN ───────── */
+  function testimonialStarsGlow() {
+    onVisibleEach('.testimonial__stars', (container) => {
+      const stars = container.querySelectorAll('.testimonial__star--filled');
+      anime({
+        targets: stars,
+        opacity: [0, 1],
+        scale: [0, 1],
+        duration: 400,
+        delay: anime.stagger(100),
+        easing: 'easeOutBack',
+      });
+    }, 0.3);
+  }
+
+  /* ───────── 9. CTA BANNER — LÍNEAS DE ESCANEO ───────── */
+  function ctaScanEffect() {
+    const banner = el('.cta-banner');
+    if (!banner) return;
+    const scanLine = document.createElement('div');
+    scanLine.className = 'cta-scanline';
+    banner.appendChild(scanLine);
+    anime({
+      targets: scanLine,
+      top: ['0%', '100%'],
+      duration: 3000,
+      loop: true,
+      easing: 'linear',
+    });
+  }
+
+  /* ───────── 10. TIMELINE — DOTS PULSANTES ───────── */
+  function timelinePulse() {
+    onVisibleEach('.timeline__dot', (dot) => {
+      anime({
+        targets: dot,
+        scale: [1, 1.3, 1],
+        boxShadow: [
+          '0 2px 12px rgba(204,0,0,0.3)',
+          '0 4px 24px rgba(204,0,0,0.6)',
+          '0 2px 12px rgba(204,0,0,0.3)',
+        ],
+        duration: 1200,
+        loop: true,
+        easing: 'easeInOutSine',
+      });
+    }, 0.3);
+  }
+
+  /* ───────── 11. PROCESS STEPS ───────── */
+  function processReveal() {
+    onVisible('.process', (container) => {
+      const steps = container.querySelectorAll('.process__step');
+      steps.forEach(s => s.classList.remove('animate'));
+      anime({
+        targets: steps,
+        opacity: [0, 1],
+        translateY: [40, 0],
+        duration: 600,
+        delay: anime.stagger(150),
+        easing: 'easeOutQuad',
+      });
+    });
+  }
+
+  /* ───────── 12. GUARANTEE CARDS ───────── */
+  function guaranteeEntrance() {
+    onVisible('.guarantee', (container) => {
+      const items = container.querySelectorAll('.guarantee__item');
+      items.forEach(i => i.classList.remove('animate'));
+      anime({
+        targets: items,
+        opacity: [0, 1],
+        translateY: [30, 0],
+        duration: 500,
+        delay: anime.stagger(100),
+        easing: 'easeOutQuad',
+      });
+    });
+  }
+
+  /* ───────── 13. VALUE CARDS ───────── */
+  function valuesEntrance() {
+    onVisible('.values', (container) => {
+      const cards = container.querySelectorAll('.value-card');
+      cards.forEach(c => c.classList.remove('animate'));
+      anime({
+        targets: cards,
+        opacity: [0, 1],
+        translateY: [30, 0],
+        duration: 500,
+        delay: anime.stagger(120),
+        easing: 'easeOutQuad',
+      });
+    });
+  }
+
+  /* ───────── 14. TEAM MEMBERS ───────── */
+  function teamEntrance() {
+    onVisible('.team', (container) => {
+      const members = container.querySelectorAll('.team__member');
+      members.forEach(m => m.classList.remove('animate'));
+      anime({
+        targets: members,
+        opacity: [0, 1],
+        translateY: [30, 0],
+        duration: 500,
+        delay: anime.stagger(100),
+        easing: 'easeOutQuad',
+      });
+    });
+  }
+
+  /* ───────── 15. CERTIFICATIONS ───────── */
+  function certsEntrance() {
+    onVisible('.certifications', (container) => {
+      const items = container.querySelectorAll('.certifications__item');
+      items.forEach(i => i.classList.remove('animate'));
+      anime({
+        targets: items,
+        opacity: [0, 1],
+        translateY: [30, 0],
+        duration: 500,
+        delay: anime.stagger(100),
+        easing: 'easeOutQuad',
+      });
+    });
+  }
+
+  /* ───────── 16. FORM BOTÓN CON PARTÍCULAS ───────── */
+  function formButtonEffect() {
+    const btn = el('.form__submit');
+    if (!btn) return;
+    btn.addEventListener('mouseenter', () => {
+      anime({
+        targets: btn,
+        scale: [1, 1.03],
+        boxShadow: ['0 4px 15px rgba(204,0,0,0.3)', '0 8px 30px rgba(204,0,0,0.5)'],
+        duration: 300,
+        easing: 'easeOutQuad',
+      });
+    });
+    btn.addEventListener('mouseleave', () => {
+      anime({
+        targets: btn,
+        scale: [1.03, 1],
+        boxShadow: ['0 8px 30px rgba(204,0,0,0.5)', '0 4px 15px rgba(204,0,0,0.3)'],
+        duration: 300,
+        easing: 'easeOutQuad',
+      });
+    });
+    btn.addEventListener('click', function onClick(e) {
+      if (btn.disabled) return;
+      const rect = btn.getBoundingClientRect();
+      const cx = e.clientX - rect.left;
+      const cy = e.clientY - rect.top;
+      for (let i = 0; i < 8; i++) {
+        const dot = document.createElement('span');
+        dot.className = 'form-particle';
+        dot.style.left = cx + 'px';
+        dot.style.top = cy + 'px';
+        btn.appendChild(dot);
+        const angle = (i / 8) * Math.PI * 2;
+        const dist = anime.random(40, 80);
+        anime({
+          targets: dot,
+          translateX: Math.cos(angle) * dist,
+          translateY: Math.sin(angle) * dist,
+          opacity: [1, 0],
+          scale: [1, 0],
+          duration: 600,
+          easing: 'easeOutQuad',
+          complete: () => dot.remove(),
+        });
+      }
+    });
+  }
+
+  /* ───────── 17. CONTACT CARDS HOVER ───────── */
+  function contactCardHover() {
+    els('.contact__card').forEach((card) => {
+      card.addEventListener('mouseenter', () => {
+        const icon = card.querySelector('.contact__card-icon');
+        if (icon) {
+          anime({
+            targets: icon,
+            scale: [1, 1.15],
+            rotate: [0, -5, 5, 0],
+            duration: 500,
+            easing: 'easeOutQuad',
+          });
+        }
+      });
+    });
+  }
+
+  /* ───────── 18. SERVICIO DETALLE ───────── */
+  function serviceDetailReveal() {
+    onVisibleEach('.service-detail', (el) => {
+      el.classList.remove('animate');
+      anime({
+        targets: el,
+        opacity: [0, 1],
+        translateY: [40, 0],
+        duration: 700,
+        easing: 'easeOutQuad',
+      });
+    });
+  }
+
+  /* ───────── 19. TABLAS CON STAGGER ───────── */
+  function tableStagger() {
+    onVisibleEach('.table-wrap', (wrap) => {
+      wrap.classList.remove('animate');
+      const rows = wrap.querySelectorAll('tbody tr');
+      anime({
+        targets: rows,
+        opacity: [0, 1],
+        translateX: [20, 0],
+        duration: 400,
+        delay: anime.stagger(80),
+        easing: 'easeOutQuad',
+      });
+    });
+  }
+
+  /* ───────── 20. FOOTER SOCIAL LINKS ───────── */
+  function footerSocialEntrance() {
+    onVisible('.footer__social', (container) => {
+      const links = container.querySelectorAll('.footer__social-link');
+      anime({
+        targets: links,
+        opacity: [0, 1],
+        translateY: [15, 0],
+        duration: 400,
+        delay: anime.stagger(100),
+        easing: 'easeOutQuad',
+      });
+    });
+  }
+
+  /* ═══════════════════════════════════════
+     ANIMACIONES 3D INTERACTIVAS
+     ═══════════════════════════════════════ */
+
+  /* ───────── 21. 3D TILT EN TARJETAS (service, value, guarantee, team) ───────── */
+  function cardTilt3D() {
+    const selectors = '.service-card, .value-card, .guarantee__item, .team__member, .certifications__item, .benefit-item';
+    els(selectors).forEach((card) => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width;
+        const y = (e.clientY - rect.top) / rect.height;
+        const tiltX = (y - 0.5) * -12;
+        const tiltY = (x - 0.5) * 12;
+        card.style.transform = `perspective(800px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale3d(1.02, 1.02, 1.02)`;
+        card.style.transition = 'transform 0.1s ease-out';
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+        card.style.transition = 'transform 0.4s ease-out';
+      });
+    });
+  }
+
+  /* ───────── 22. PARALLAX 3D EN HERO VISUAL ───────── */
+  function parallax3D() {
+    const visual = el('.hero__visual');
+    if (!visual) return;
+    visual.addEventListener('mousemove', (e) => {
+      const rect = visual.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      visual.style.transform = `perspective(600px) rotateY(${x * 8}deg) rotateX(${y * -6}deg)`;
+      visual.style.transition = 'transform 0.15s ease-out';
+    });
+    visual.addEventListener('mouseleave', () => {
+      visual.style.transform = 'perspective(600px) rotateY(0deg) rotateX(0deg)';
+      visual.style.transition = 'transform 0.5s ease-out';
+    });
+  }
+
+  /* ───────── 23. 3D FLOATING ORB EN SECCIÓN DARK ───────── */
+  function floatingOrbs3D() {
+    const darkSections = els('.section--dark, .cta-banner');
+    darkSections.forEach((section) => {
+      const orbs = section.querySelectorAll('.hero__orb');
+      if (!orbs.length) return;
+      section.addEventListener('mousemove', (e) => {
+        const rect = section.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+        const y = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+        orbs.forEach((orb, i) => {
+          const factor = (i + 1) * 10;
+          orb.style.transform = `translate(${x * factor}px, ${y * factor}px)`;
+          orb.style.transition = 'transform 0.3s ease-out';
+        });
+      });
+      section.addEventListener('mouseleave', () => {
+        orbs.forEach((orb) => {
+          orb.style.transform = 'translate(0, 0)';
+          orb.style.transition = 'transform 0.8s ease-out';
+        });
+      });
+    });
+  }
+
+  /* ───────── 24. NAVBAR 3D — SOMBRA DINÁMICA ───────── */
+  function navTilt3D() {
+    const nav = el('.nav');
+    if (!nav) return;
+    nav.addEventListener('mousemove', (e) => {
+      const rect = nav.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      nav.style.boxShadow = `0 2px 30px rgba(0,0,0,${0.2 + Math.abs(x) * 0.3})`;
+      nav.style.transition = 'box-shadow 0.1s ease-out';
+    });
+    nav.addEventListener('mouseleave', () => {
+      nav.style.boxShadow = '';
+      nav.style.transition = 'box-shadow 0.4s ease-out';
+    });
+  }
+
+  /* ═══════════════════════════════════════
+     ANIMACIONES GRANDES / DRAMÁTICAS
+     ═══════════════════════════════════════ */
+
+  /* ───────── 25. ESCUDO 3D ROTATORIO EN HERO ───────── */
+  function rotatingShield3D() {
+    const visual = el('.hero__visual svg');
+    if (!visual) return;
+
+    visual.style.transformStyle = 'preserve-3d';
+    visual.style.perspective = '800px';
+
+    anime({
+      targets: visual,
+      rotateY: [0, 360],
+      duration: 15000,
+      loop: true,
+      easing: 'linear',
+    });
+
+    anime({
+      targets: visual,
+      translateY: [0, -12, 0],
+      scale: [1, 1.03, 1],
+      duration: 3500,
+      loop: true,
+      easing: 'easeInOutSine',
+    });
+  }
+
+  /* ───────── 26. ONDAS DE PULSO EXPANSIVAS ───────── */
+  function pulseWaveEffect() {
+    const hero = el('#hero');
+    if (!hero) return;
+
+    const colors = [
+      'rgba(204, 0, 0, 0.12)',
+      'rgba(212, 168, 71, 0.08)',
+      'rgba(204, 0, 0, 0.06)',
+    ];
+
+    colors.forEach((color, i) => {
+      const ring = document.createElement('div');
+      ring.className = 'pulse-ring';
+      ring.style.borderColor = color;
+      hero.appendChild(ring);
+
+      const maxSize = Math.max(hero.offsetWidth, hero.offsetHeight) * 1.8;
+      anime({
+        targets: ring,
+        width: [0, maxSize],
+        height: [0, maxSize],
+        opacity: [0.8, 0],
+        duration: 5000,
+        delay: i * 1600,
+        loop: true,
+        easing: 'easeOutCubic',
+        update: (anim) => {
+          const s = anim.animations[0].currentValue;
+          ring.style.left = `calc(50% - ${s / 2}px)`;
+          ring.style.top = `calc(50% - ${s / 2}px)`;
+        },
+      });
+    });
+  }
+
+  /* ═══════════════════════════════════════
+     NUEVOS COMPONENTES — GRANDES IDEAS
+     ═══════════════════════════════════════ */
+
+  /* ───────── A. WHATSAPP FLOTANTE ───────── */
+  function whatsappFloat() {
+    if (el('.whatsapp-float')) return;
+    const a = document.createElement('a');
+    a.className = 'whatsapp-float';
+    a.href = 'https://wa.me/573000000000';
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.setAttribute('aria-label', 'Contactar por WhatsApp');
+    a.innerHTML = '<svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>';
+    document.body.appendChild(a);
+
+    anime({
+      targets: a,
+      scale: [1, 1.08, 1],
+      duration: 2000,
+      loop: true,
+      easing: 'easeInOutSine',
+    });
+  }
+
+  /* ───────── B. BARRA DE PROGRESO ───────── */
+  function scrollProgress() {
+    const bar = document.createElement('div');
+    bar.className = 'progress-bar';
+    document.body.appendChild(bar);
+    function update() {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.width = (docHeight > 0 ? (scrollTop / docHeight) * 100 : 0) + '%';
+    }
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+  }
+
+  /* ───────── C. VOLVER ARRIBA ───────── */
+  function backToTop() {
+    const btn = document.createElement('button');
+    btn.className = 'back-to-top';
+    btn.setAttribute('aria-label', 'Volver arriba');
+    btn.innerHTML = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="4 13 10 7 16 13"/></svg>';
+    document.body.appendChild(btn);
+
+    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    let ticking = false;
+    function check() {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          btn.classList.toggle('visible', window.scrollY > 400);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+    window.addEventListener('scroll', check, { passive: true });
+    check();
+  }
+
+  /* ───────── D. SVGs QUE SE DIBUJAN SOLOS ───────── */
+  function svgDraw() {
+    document.querySelectorAll('.hero__visual svg, .benefits__visual svg, .service-detail__visual svg').forEach(svg => {
+      const paths = svg.querySelectorAll('[stroke]:not([stroke="none"])');
+      const valid = Array.from(paths).filter(p => p.getTotalLength && p.getTotalLength() > 0);
+      if (!valid.length) return;
+
+      valid.forEach(p => {
+        const len = p.getTotalLength();
+        p.style.strokeDasharray = len;
+        p.style.strokeDashoffset = len;
+        p.dataset.len = len;
+      });
+
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const targets = entry.target.querySelectorAll('[stroke]:not([stroke="none"])');
+            const validTargets = Array.from(targets).filter(t => parseFloat(t.dataset.len) > 0);
+            if (validTargets.length) {
+              anime({
+                targets: validTargets,
+                strokeDashoffset: [el => el.dataset.len, 0],
+                duration: 2500,
+                delay: anime.stagger(30),
+                easing: 'easeOutQuad',
+              });
+            }
+            obs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.3 });
+      obs.observe(svg);
+    });
+  }
+
+  /* ───────── E. EFECTO SPRAY AL MOUSE ───────── */
+  function mouseSpray() {
+    let ticking = false;
+    document.addEventListener('mousemove', (e) => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          for (let i = 0; i < 2; i++) {
+            const p = document.createElement('div');
+            p.className = 'mouse-particle';
+            const size = Math.random() * 4 + 2;
+            p.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX + (Math.random() - 0.5) * 20}px;top:${e.clientY + (Math.random() - 0.5) * 20}px;background:rgba(204,0,0,${Math.random() * 0.4 + 0.2})`;
+            document.body.appendChild(p);
+            anime({
+              targets: p,
+              translateX: (Math.random() - 0.5) * 40,
+              translateY: (Math.random() - 0.5) * 40 - 10,
+              opacity: [0.6, 0],
+              scale: [1, 0],
+              duration: 500 + Math.random() * 300,
+              easing: 'easeOutQuad',
+              complete: () => p.remove(),
+            });
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+  }
+
+  /* ───────── F. CONFETI EN CONTADORES ───────── */
+  function burstConfetti(x, y) {
+    const colors = ['#CC0000', '#D4A847', '#FF4444', '#F0D78C', '#FFFFFF'];
+    for (let i = 0; i < 24; i++) {
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      const w = Math.random() * 6 + 4;
+      const h = Math.random() * 6 + 4;
+      piece.style.cssText = `left:${x}px;top:${y}px;width:${w}px;height:${h}px;background:${colors[Math.floor(Math.random() * colors.length)]}`;
+      document.body.appendChild(piece);
+      const angle = Math.random() * Math.PI * 2;
+      const dist = anime.random(60, 200);
+      anime({
+        targets: piece,
+        translateX: Math.cos(angle) * dist,
+        translateY: Math.sin(angle) * dist + 150,
+        rotate: anime.random(-360, 360),
+        opacity: [1, 0],
+        duration: anime.random(1000, 2000),
+        easing: 'easeOutQuad',
+        complete: () => piece.remove(),
+      });
+    }
+  }
+
+  /* ───────── G. LOADER DE ENTRADA ───────── */
+  function pageLoader() {
+    const loader = document.getElementById('pageLoader');
+    if (!loader) return;
+    const logo = loader.querySelector('.page-loader__logo');
+    if (logo) {
+      anime({
+        targets: logo,
+        scale: [1, 1.15, 1],
+        rotate: [0, 5, -5, 0],
+        duration: 1400,
+        loop: true,
+        easing: 'easeInOutSine',
+      });
+    }
+  }
+
+  /* ═══════════════════════════════════════
+     NAVBAR — CAMBIO DE COLOR POR SCROLL
+     ═══════════════════════════════════════ */
+
+  /* ───────── 27. COLOR DINÁMICO DEL NAVBAR ───────── */
+  function navColorOnScroll() {
+    const nav = el('.nav');
+    if (!nav) return;
+
+    const navLinks = nav.querySelectorAll('.nav__link');
+    const logoText = nav.querySelector('.nav__logo-text');
+    const goldSpan = nav.querySelector('.nav__logo-text span');
+    const navCta = nav.querySelector('.nav__cta');
+    let currentIsDark = true;
+
+    function applyTheme(isDark) {
+      if (isDark === currentIsDark) return;
+      currentIsDark = isDark;
+
+      const color = isDark ? '#FFFFFF' : '#0A0A0A';
+      navLinks.forEach(l => l.style.color = color);
+      if (logoText) logoText.style.color = color;
+      if (goldSpan) goldSpan.style.color = 'var(--color-gold)';
+      if (navCta) {
+        navCta.style.color = '#FFFFFF';
+        navCta.style.background = 'var(--gradient-red)';
+      }
+
+      if (nav.classList.contains('nav--scrolled')) {
+        nav.style.backgroundColor = isDark ? 'rgba(10, 10, 10, 0.92)' : 'rgba(255, 255, 255, 0.95)';
+        nav.style.borderBottom = isDark ? '1px solid rgba(255,255,255,0.05)' : '1px solid rgba(0,0,0,0.06)';
+      }
+    }
+
+    function getSections() {
+      const list = [];
+      document.querySelectorAll('#hero, .hero-secondary, .section--dark, .cta-banner, .footer')
+        .forEach(el => list.push({ el, d: true }));
+      document.querySelectorAll('.section--light')
+        .forEach(el => list.push({ el, d: false }));
+      document.querySelectorAll('.section:not(#hero):not(.hero-secondary):not(.section--dark):not(.section--light):not(.cta-banner):not(.footer)')
+        .forEach(el => list.push({ el, d: false }));
+      return list;
+    }
+
+    function update() {
+      const sections = getSections();
+      sections.sort((a, b) => a.el.offsetTop - b.el.offsetTop);
+      const scrollY = window.scrollY + 100;
+      let isDark = true;
+      for (const s of sections) {
+        if (scrollY >= s.el.offsetTop) isDark = s.d;
+        else break;
+      }
+      applyTheme(isDark);
+    }
+
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+  }
+
+  /* ═══════════════════════════════════════
+     FEATURES PREMIUM — MODAL, FAQ, COOKIE, ETC
+     ═══════════════════════════════════════ */
+
+  /* ───────── H. SERVICE MODAL ───────── */
+  function serviceModal() {
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = '<div class="modal"><button class="modal__close" aria-label="Cerrar"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 5 L15 15 M15 5 L5 15"/></svg></button><div class="modal__body"></div></div>';
+    document.body.appendChild(overlay);
+    const body = overlay.querySelector('.modal__body');
+    const close = overlay.querySelector('.modal__close');
+
+    close.addEventListener('click', () => overlay.classList.remove('active'));
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('active'); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') overlay.classList.remove('active'); });
+
+    els('.service-card__link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const card = link.closest('.service-card');
+        if (!card) return;
+        const title = card.querySelector('.service-card__title')?.textContent || 'Servicio';
+        const desc = card.querySelector('.service-card__desc')?.textContent || '';
+        const iconHTML = card.querySelector('.service-card__icon')?.innerHTML || '';
+        const features = card.querySelectorAll('.service-detail__feature') || [];
+        let featuresHTML = '';
+        if (features.length) {
+          featuresHTML = '<div class="modal__features">';
+          features.forEach(f => featuresHTML += `<div class="modal__feature">${f.innerHTML}</div>`);
+          featuresHTML += '</div>';
+        } else {
+          featuresHTML = `
+            <div class="modal__features">
+              <div class="modal__feature"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 9 7 13 15 5"/></svg><span>Profesionales certificados</span></div>
+              <div class="modal__feature"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 9 7 13 15 5"/></svg><span>Productos eco-amigables</span></div>
+              <div class="modal__feature"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 9 7 13 15 5"/></svg><span>Garantía de resultados</span></div>
+            </div>`;
+        }
+        body.innerHTML = `
+          <div class="modal__icon">${iconHTML}</div>
+          <h3 class="modal__title">${title}</h3>
+          <p class="modal__desc">${desc}</p>
+          ${featuresHTML}
+          <a href="contact.html" class="btn btn--primary modal__cta">Solicitar Cotización</a>
+        `;
+        overlay.classList.add('active');
+        anime({
+          targets: '.modal__icon',
+          scale: [0, 1],
+          rotate: [180, 0],
+          duration: 500,
+          easing: 'easeOutBack',
+        });
+      });
+    });
+  }
+
+  /* ───────── I. FAQ ACCORDION ───────── */
+  function faqAccordion() {
+    els('.faq-question').forEach(q => {
+      q.addEventListener('click', () => {
+        const item = q.closest('.faq-item');
+        const isActive = item.classList.contains('active');
+        els('.faq-item.active').forEach(i => i.classList.remove('active'));
+        if (!isActive) item.classList.add('active');
+      });
+    });
+  }
+
+  /* ───────── J. COOKIE CONSENT ───────── */
+  function cookieConsent() {
+    if (localStorage.getItem('cookiesAccepted')) return;
+    const banner = document.createElement('div');
+    banner.className = 'cookie-consent';
+    banner.innerHTML = `
+      <p>Usamos cookies para mejorar tu experiencia. Al continuar navegando aceptas nuestra <a href="#">política de privacidad</a>.</p>
+      <button class="cookie-consent__btn">Aceptar</button>
+    `;
+    document.body.appendChild(banner);
+    setTimeout(() => banner.classList.add('show'), 500);
+    banner.querySelector('.cookie-consent__btn').addEventListener('click', () => {
+      localStorage.setItem('cookiesAccepted', 'true');
+      banner.style.transform = 'translateY(100%)';
+      setTimeout(() => banner.remove(), 500);
+    });
+  }
+
+  /* ───────── K. PAGE TRANSITIONS ───────── */
+  function pageTransition() {
+    const overlay = document.createElement('div');
+    overlay.className = 'page-transition';
+    overlay.innerHTML = '<svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="18" stroke="#CC0000" stroke-width="2.5" fill="none"/><path d="M20 8 L20 14 M20 26 L20 32 M8 20 L14 20 M26 20 L32 20" stroke="#CC0000" stroke-width="2.5" stroke-linecap="round"/><circle cx="20" cy="20" r="4" fill="#CC0000"/></svg>';
+    document.body.appendChild(overlay);
+
+    document.querySelectorAll('a[href]:not([href^="#"]):not([href^="http"]):not([href^="https://wa.me"]):not([target="_blank"])').forEach(a => {
+      const href = a.getAttribute('href');
+      if (!href || href === '#' || href.startsWith('javascript:')) return;
+      if (!href.endsWith('.html') && !href.endsWith('/')) return;
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        overlay.classList.add('active');
+        setTimeout(() => { window.location.href = href; }, 500);
+      });
+    });
+  }
+
+  /* ───────── L. MAGNETIC BUTTONS ───────── */
+  function magneticButtons() {
+    els('.btn, .nav__cta, .whatsapp-float, .back-to-top').forEach(btn => {
+      btn.addEventListener('mousemove', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const x = (e.clientX - rect.left - rect.width / 2) * 0.3;
+        const y = (e.clientY - rect.top - rect.height / 2) * 0.3;
+        btn.style.transform = `translate(${x}px, ${y}px)`;
+      });
+      btn.addEventListener('mouseleave', () => {
+        btn.style.transform = '';
+        btn.style.transition = 'transform 0.3s ease-out';
+        setTimeout(() => { btn.style.transition = ''; }, 300);
+      });
+    });
+  }
+
+  /* ───────── INIT ───────── */
+
+  function initAnimations() {
+    /* específicas */
+    logoPulse();
+    heroFumigationFog();
+    rotatingShield3D();
+    pulseWaveEffect();
+    heroTextStagger();
+    heroVisualReveal();
+    counterElastic();
+    serviceCardsAnime();
+    benefitIcons3d();
+    testimonialStarsGlow();
+    ctaScanEffect();
+    timelinePulse();
+    processReveal();
+    guaranteeEntrance();
+    valuesEntrance();
+    teamEntrance();
+    certsEntrance();
+    formButtonEffect();
+    contactCardHover();
+    serviceDetailReveal();
+    tableStagger();
+    footerSocialEntrance();
+
+    /* 3D interactivas */
+    cardTilt3D();
+    parallax3D();
+    floatingOrbs3D();
+    navTilt3D();
+
+    /* nuevos componentes grandes */
+    whatsappFloat();
+    scrollProgress();
+    backToTop();
+    svgDraw();
+    mouseSpray();
+    pageLoader();
+
+    /* general: elementos .animate que no tienen handler específico */
+    observeElements('.animate');
+    observeElements('.animate--left', 'visible');
+    observeElements('.animate--right', 'visible');
+    observeElements('.animate--scale', 'visible');
+    observeElements('.animate--up', 'visible');
+
+    /* color dinámico del navbar */
+    navColorOnScroll();
+
+    /* features premium: modales, FAQ, cookie, transiciones, imán */
+    serviceModal();
+    faqAccordion();
+    cookieConsent();
+    pageTransition();
+    magneticButtons();
+  }
+
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { initAnimations };
+  } else {
+    window.initAnimations = initAnimations;
+  }
+
+})();
