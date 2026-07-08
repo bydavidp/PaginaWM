@@ -257,53 +257,20 @@ function initFormValidation() {
   });
 }
 
-/* ══ ANIMATE STARS IN TESTIMONIALS ══ */
-
-/**
- * @description Anima las estrellas de testimonios al entrar en viewport
- */
-function initStarAnimation() {
-  const starContainers = document.querySelectorAll('.testimonial__stars');
-  if (!starContainers.length) return;
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const stars = entry.target.querySelectorAll('.testimonial__star--filled');
-          stars.forEach((star, i) => {
-            star.style.transition = `opacity 300ms ease ${i * 100}ms`;
-            star.style.opacity = '1';
-          });
-          observer.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.5 }
-  );
-
-  starContainers.forEach((container) => {
-    const stars = container.querySelectorAll('.testimonial__star--filled');
-    stars.forEach((star) => {
-      star.style.opacity = '0';
-    });
-    observer.observe(container);
-  });
-}
-
 /* ══ ACTIVE NAV LINK ══ */
 
 /**
  * @description Marca el link de navegación activo según la página actual
  */
 function setActiveNavLink() {
-  const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+  const currentPath = window.location.pathname.split('/').pop();
+  const normalizedPath = (!currentPath || currentPath === '' || currentPath === 'index.html') ? 'index.html' : currentPath;
   const links = document.querySelectorAll('.nav__link');
 
   links.forEach((link) => {
     link.classList.remove('nav__link--active');
     const href = link.getAttribute('href');
-    if (href === currentPath) {
+    if (href === normalizedPath) {
       link.classList.add('nav__link--active');
     }
   });
@@ -339,7 +306,6 @@ function init() {
   initMobileMenu();
   initTestimonials();
   initFormValidation();
-  initStarAnimation();
   setActiveNavLink();
   initSmoothScroll();
 

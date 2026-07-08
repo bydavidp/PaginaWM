@@ -41,6 +41,22 @@
     elements.forEach((el) => observer.observe(el));
   }
 
+  /* ───────── Animate entrance genérica (reemplaza duplicados) ───────── */
+  function staggerReveal(containerSelector, childSelector, { delay = 120, y = 40, removeAnime = true } = {}) {
+    onVisibleEach(containerSelector, (container) => {
+      const items = container.querySelectorAll(childSelector);
+      if (removeAnime) items.forEach(i => i.classList.remove('animate'));
+      anime({
+        targets: items,
+        opacity: [0, 1],
+        translateY: [y, 0],
+        duration: 600,
+        delay: anime.stagger(delay),
+        easing: 'easeOutQuad',
+      });
+    });
+  }
+
   /* ───────── 1. LOGO PULSE ───────── */
   function logoPulse() {
     const logoSvg = el('.nav__logo svg circle:first-child');
@@ -62,7 +78,7 @@
 
     const canvas = document.createElement('canvas');
     canvas.className = 'hero__particles';
-    canvas.ariaHidden = 'true';
+    canvas.setAttribute('aria-hidden', 'true');
     canvas.style.zIndex = '10';
     hero.appendChild(canvas);
     const ctx = canvas.getContext('2d');
@@ -231,6 +247,134 @@
     });
   }
 
+  /* ───────── 4b. HERO IMAGE — FLOTACIÓN SUTIL + EFECTO LUPA ───────── */
+  function heroImageFloat() {
+    const img = el('.hero__image');
+    if (!img) return;
+    anime({
+      targets: img,
+      translateY: [0, -8, 0],
+      duration: 4000,
+      loop: true,
+      easing: 'easeInOutSine',
+    });
+  }
+
+  /* ───────── 4c. HOVER ZOOM EN HERO IMAGE ───────── */
+  function heroImageHover() {
+    const img = el('.hero__image');
+    if (!img) return;
+    img.addEventListener('mouseenter', () => {
+      anime({
+        targets: img,
+        scale: [1, 1.04],
+        filter: ['brightness(1)', 'brightness(1.08)'],
+        duration: 400,
+        easing: 'easeOutQuad',
+      });
+    });
+    img.addEventListener('mouseleave', () => {
+      anime({
+        targets: img,
+        scale: [1.04, 1],
+        filter: ['brightness(1.08)', 'brightness(1)'],
+        duration: 400,
+        easing: 'easeOutQuad',
+      });
+    });
+  }
+
+  /* ───────── 4d. BENEFITS IMAGE — REVELACIÓN CON ZOOM + FLOTACIÓN ───────── */
+  function benefitsImageReveal() {
+    const img = el('.benefits__image');
+    if (!img) return;
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          img.classList.remove('animate--right');
+          anime({
+            targets: img,
+            opacity: [0, 1],
+            scale: [0.9, 1],
+            translateX: [40, 0],
+            duration: 800,
+            easing: 'easeOutExpo',
+          });
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    obs.observe(img);
+  }
+
+  /* ───────── 4e. BENEFITS IMAGE — HOVER ZOOM SUTIL ───────── */
+  function benefitsImageHover() {
+    const img = el('.benefits__image');
+    if (!img) return;
+    img.addEventListener('mouseenter', () => {
+      anime({
+        targets: img,
+        scale: [1, 1.03],
+        duration: 400,
+        easing: 'easeOutQuad',
+      });
+    });
+    img.addEventListener('mouseleave', () => {
+      anime({
+        targets: img,
+        scale: [1.03, 1],
+        duration: 400,
+        easing: 'easeOutQuad',
+      });
+    });
+  }
+
+  /* ───────── 4f. TEAM IMAGE — REVELACIÓN CON EFECTO DE APERTURA ───────── */
+  function teamImageReveal() {
+    const img = el('.team__image');
+    if (!img) return;
+    const container = img.closest('.team__photo');
+    if (!container) return;
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          anime({
+            targets: container,
+            opacity: [0, 1],
+            scale: [0.95, 1],
+            duration: 700,
+            easing: 'easeOutExpo',
+          });
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    container.style.opacity = '0';
+    obs.observe(container);
+  }
+
+  /* ───────── 4g. TEAM IMAGE — HOVER CON BRILLO ───────── */
+  function teamImageHover() {
+    const img = el('.team__image');
+    if (!img) return;
+    img.addEventListener('mouseenter', () => {
+      anime({
+        targets: img,
+        filter: ['brightness(1)', 'brightness(1.06) contrast(1.04)'],
+        duration: 400,
+        easing: 'easeOutQuad',
+      });
+    });
+    img.addEventListener('mouseleave', () => {
+      anime({
+        targets: img,
+        filter: ['brightness(1.06) contrast(1.04)', 'brightness(1) contrast(1)'],
+        duration: 400,
+        easing: 'easeOutQuad',
+      });
+    });
+  }
+
   /* ───────── 5. CONTADORES CON REBOTE ELÁSTICO ───────── */
   function counterElastic() {
     onVisibleEach('.counter__number', (el) => {
@@ -264,7 +408,7 @@
 
   /* ───────── 6. SERVICE CARDS — STAGGER + HOVER WAVE ───────── */
   function serviceCardsAnime() {
-    onVisible('.services-grid', (container) => {
+    onVisibleEach('.services-grid', (container) => {
       const cards = container.querySelectorAll('.service-card');
       cards.forEach(c => c.classList.remove('animate'));
       anime({
@@ -300,20 +444,6 @@
         });
       });
     });
-  }
-
-  function onVisible(selector, callback, threshold = 0.15) {
-    const nodes = els(selector);
-    if (!nodes.length) return;
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          callback(entry.target);
-          obs.unobserve(entry.target);
-        }
-      });
-    }, { threshold });
-    nodes.forEach((n) => obs.observe(n));
   }
 
   /* ───────── 7. BENEFIT ITEMS — ICONOS CON ROTACIÓN 3D ───────── */
@@ -384,82 +514,27 @@
 
   /* ───────── 11. PROCESS STEPS ───────── */
   function processReveal() {
-    onVisible('.process', (container) => {
-      const steps = container.querySelectorAll('.process__step');
-      steps.forEach(s => s.classList.remove('animate'));
-      anime({
-        targets: steps,
-        opacity: [0, 1],
-        translateY: [40, 0],
-        duration: 600,
-        delay: anime.stagger(150),
-        easing: 'easeOutQuad',
-      });
-    });
+    staggerReveal('.process', '.process__step', { delay: 150, y: 40 });
   }
 
   /* ───────── 12. GUARANTEE CARDS ───────── */
   function guaranteeEntrance() {
-    onVisible('.guarantee', (container) => {
-      const items = container.querySelectorAll('.guarantee__item');
-      items.forEach(i => i.classList.remove('animate'));
-      anime({
-        targets: items,
-        opacity: [0, 1],
-        translateY: [30, 0],
-        duration: 500,
-        delay: anime.stagger(100),
-        easing: 'easeOutQuad',
-      });
-    });
+    staggerReveal('.guarantee', '.guarantee__item', { delay: 100, y: 30 });
   }
 
   /* ───────── 13. VALUE CARDS ───────── */
   function valuesEntrance() {
-    onVisible('.values', (container) => {
-      const cards = container.querySelectorAll('.value-card');
-      cards.forEach(c => c.classList.remove('animate'));
-      anime({
-        targets: cards,
-        opacity: [0, 1],
-        translateY: [30, 0],
-        duration: 500,
-        delay: anime.stagger(120),
-        easing: 'easeOutQuad',
-      });
-    });
+    staggerReveal('.values', '.value-card', { delay: 120, y: 30 });
   }
 
   /* ───────── 14. TEAM MEMBERS ───────── */
   function teamEntrance() {
-    onVisible('.team', (container) => {
-      const members = container.querySelectorAll('.team__member');
-      members.forEach(m => m.classList.remove('animate'));
-      anime({
-        targets: members,
-        opacity: [0, 1],
-        translateY: [30, 0],
-        duration: 500,
-        delay: anime.stagger(100),
-        easing: 'easeOutQuad',
-      });
-    });
+    staggerReveal('.team', '.team__member', { delay: 100, y: 30 });
   }
 
   /* ───────── 15. CERTIFICATIONS ───────── */
   function certsEntrance() {
-    onVisible('.certifications', (container) => {
-      const items = container.querySelectorAll('.certifications__item');
-      items.forEach(i => i.classList.remove('animate'));
-      anime({
-        targets: items,
-        opacity: [0, 1],
-        translateY: [30, 0],
-        duration: 500,
-        delay: anime.stagger(100),
-        easing: 'easeOutQuad',
-      });
-    });
+    staggerReveal('.certifications', '.certifications__item', { delay: 100, y: 30 });
   }
 
   /* ───────── 16. FORM BOTÓN CON PARTÍCULAS ───────── */
@@ -561,15 +636,36 @@
 
   /* ───────── 20. FOOTER SOCIAL LINKS ───────── */
   function footerSocialEntrance() {
-    onVisible('.footer__social', (container) => {
-      const links = container.querySelectorAll('.footer__social-link');
-      anime({
-        targets: links,
-        opacity: [0, 1],
-        translateY: [15, 0],
-        duration: 400,
-        delay: anime.stagger(100),
-        easing: 'easeOutQuad',
+    staggerReveal('.footer__social', '.footer__social-link', { delay: 100, y: 15 });
+  }
+
+  /* ───────── 20b. SCROLL PARALLAX — secciones dark ───────── */
+  function scrollParallax() {
+    const sections = document.querySelectorAll('.section--dark');
+    if (!sections.length) return;
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY + window.innerHeight * 0.3;
+      sections.forEach(section => {
+        const top = section.offsetTop;
+        const height = section.offsetHeight;
+        if (scrollY > top && scrollY < top + height) {
+          const progress = (scrollY - top) / height;
+          section.style.backgroundPositionY = `${progress * 30}px`;
+        }
+      });
+    }, { passive: true });
+  }
+
+  /* ───────── 20c. TABLA ROW HOVER GLOW ───────── */
+  function tableRowGlow() {
+    document.querySelectorAll('.feature-table tbody tr').forEach(row => {
+      row.addEventListener('mouseenter', () => {
+        anime({
+          targets: row,
+          backgroundColor: ['rgba(204,0,0,0)', 'rgba(204,0,0,0.03)'],
+          duration: 300,
+          easing: 'easeOutQuad',
+        });
       });
     });
   }
@@ -787,7 +883,7 @@
 
   /* ───────── D. SVGs QUE SE DIBUJAN SOLOS ───────── */
   function svgDraw() {
-    document.querySelectorAll('.hero__visual svg, .benefits__visual svg, .service-detail__visual svg').forEach(svg => {
+    document.querySelectorAll('.service-detail__visual svg').forEach(svg => {
       const paths = svg.querySelectorAll('[stroke]:not([stroke="none"])');
       const valid = Array.from(paths).filter(p => p.getTotalLength && p.getTotalLength() > 0);
       if (!valid.length) return;
@@ -826,26 +922,24 @@
     let ticking = false;
     document.addEventListener('mousemove', (e) => {
       if (!ticking) {
-        requestAnimationFrame(() => {
-          for (let i = 0; i < 2; i++) {
-            const p = document.createElement('div');
-            p.className = 'mouse-particle';
-            const size = Math.random() * 4 + 2;
-            p.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX + (Math.random() - 0.5) * 20}px;top:${e.clientY + (Math.random() - 0.5) * 20}px;background:rgba(204,0,0,${Math.random() * 0.4 + 0.2})`;
-            document.body.appendChild(p);
-            anime({
-              targets: p,
-              translateX: (Math.random() - 0.5) * 40,
-              translateY: (Math.random() - 0.5) * 40 - 10,
-              opacity: [0.6, 0],
-              scale: [1, 0],
-              duration: 500 + Math.random() * 300,
-              easing: 'easeOutQuad',
-              complete: () => p.remove(),
-            });
-          }
-          ticking = false;
-        });
+    requestAnimationFrame(() => {
+      const p = document.createElement('div');
+      p.className = 'mouse-particle';
+      const size = Math.random() * 4 + 2;
+      p.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX + (Math.random() - 0.5) * 20}px;top:${e.clientY + (Math.random() - 0.5) * 20}px;background:rgba(204,0,0,${Math.random() * 0.4 + 0.2})`;
+      document.body.appendChild(p);
+      anime({
+        targets: p,
+        translateX: (Math.random() - 0.5) * 30,
+        translateY: (Math.random() - 0.5) * 30 - 10,
+        opacity: [0.5, 0],
+        scale: [1, 0],
+        duration: 400 + Math.random() * 200,
+        easing: 'easeOutQuad',
+        complete: () => p.remove(),
+      });
+      ticking = false;
+    });
         ticking = true;
       }
     }, { passive: true });
@@ -881,16 +975,22 @@
     const loader = document.getElementById('pageLoader');
     if (!loader) return;
     const logo = loader.querySelector('.page-loader__logo');
-    if (logo) {
-      anime({
-        targets: logo,
-        scale: [1, 1.15, 1],
-        rotate: [0, 5, -5, 0],
-        duration: 1400,
-        loop: true,
-        easing: 'easeInOutSine',
-      });
-    }
+    if (!logo) return;
+    const anim = anime({
+      targets: logo,
+      scale: [1, 1.15, 1],
+      rotate: [0, 5, -5, 0],
+      duration: 1400,
+      loop: true,
+      easing: 'easeInOutSine',
+    });
+    const obs = new MutationObserver(() => {
+      if (!document.body.contains(logo)) {
+        anim.pause();
+        obs.disconnect();
+      }
+    });
+    obs.observe(document.body, { childList: true, subtree: true });
   }
 
   /* ═══════════════════════════════════════
@@ -1018,8 +1118,14 @@
       q.addEventListener('click', () => {
         const item = q.closest('.faq-item');
         const isActive = item.classList.contains('active');
-        els('.faq-item.active').forEach(i => i.classList.remove('active'));
-        if (!isActive) item.classList.add('active');
+        els('.faq-item.active').forEach(i => {
+          i.classList.remove('active');
+          i.querySelector('.faq-question')?.setAttribute('aria-expanded', 'false');
+        });
+        if (!isActive) {
+          item.classList.add('active');
+          q.setAttribute('aria-expanded', 'true');
+        }
       });
     });
   }
@@ -1049,15 +1155,17 @@
     overlay.innerHTML = '<svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="18" stroke="#CC0000" stroke-width="2.5" fill="none"/><path d="M20 8 L20 14 M20 26 L20 32 M8 20 L14 20 M26 20 L32 20" stroke="#CC0000" stroke-width="2.5" stroke-linecap="round"/><circle cx="20" cy="20" r="4" fill="#CC0000"/></svg>';
     document.body.appendChild(overlay);
 
-    document.querySelectorAll('a[href]:not([href^="#"]):not([href^="http"]):not([href^="https://wa.me"]):not([target="_blank"])').forEach(a => {
+    document.addEventListener('click', (e) => {
+      const a = e.target.closest('a');
+      if (!a) return;
       const href = a.getAttribute('href');
       if (!href || href === '#' || href.startsWith('javascript:')) return;
+      if (a.hasAttribute('target')) return;
+      if (href.startsWith('#') || href.startsWith('http') || href.startsWith('https://wa.me')) return;
       if (!href.endsWith('.html') && !href.endsWith('/')) return;
-      a.addEventListener('click', (e) => {
-        e.preventDefault();
-        overlay.classList.add('active');
-        setTimeout(() => { window.location.href = href; }, 500);
-      });
+      e.preventDefault();
+      overlay.classList.add('active');
+      setTimeout(() => { window.location.href = href; }, 500);
     });
   }
 
@@ -1088,6 +1196,12 @@
     pulseWaveEffect();
     heroTextStagger();
     heroVisualReveal();
+    heroImageFloat();
+    heroImageHover();
+    benefitsImageReveal();
+    benefitsImageHover();
+    teamImageReveal();
+    teamImageHover();
     counterElastic();
     serviceCardsAnime();
     benefitIcons3d();
@@ -1113,11 +1227,13 @@
 
     /* nuevos componentes grandes */
     whatsappFloat();
-    scrollProgress();
-    backToTop();
-    svgDraw();
-    mouseSpray();
-    pageLoader();
+  scrollProgress();
+  backToTop();
+  svgDraw();
+  mouseSpray();
+  pageLoader();
+  scrollParallax();
+  tableRowGlow();
 
     /* general: elementos .animate que no tienen handler específico */
     observeElements('.animate');

@@ -94,7 +94,7 @@ select {
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 
   /* Typography */
-  --font-primary: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-primary: 'Inter', system-ui, -apple-system, sans-serif;
   --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
   --text-sm: clamp(0.875rem, 0.8rem + 0.37vw, 1rem);
   --text-base: clamp(1rem, 0.9rem + 0.5vw, 1.125rem);
@@ -650,6 +650,18 @@ select {
   line-height: 1.7;
 }
 
+.hero__word {
+  display: inline-block;
+  white-space: nowrap;
+}
+.hero__word em {
+  font-style: normal;
+  background: linear-gradient(135deg, var(--color-red) 0%, #FF4444 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 .hero__actions {
   display: flex;
   flex-wrap: wrap;
@@ -679,6 +691,20 @@ select {
   position: relative;
   z-index: 1;
   filter: drop-shadow(0 10px 40px rgba(204, 0, 0, 0.15));
+}
+
+.hero__image {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  border-radius: var(--radius-lg);
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 40px rgba(204, 0, 0, 0.1);
+  object-fit: cover;
+  aspect-ratio: 5/4;
+  will-change: transform, filter;
+  cursor: crosshair;
 }
 
 /* ══ SERVICES OVERVIEW ══ */
@@ -852,6 +878,18 @@ select {
   max-width: 480px;
   height: auto;
   filter: drop-shadow(0 4px 20px rgba(204, 0, 0, 0.1));
+}
+
+.benefits__image {
+  width: 100%;
+  max-width: 480px;
+  height: auto;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  object-fit: cover;
+  aspect-ratio: 6/5;
+  will-change: transform, opacity;
+  cursor: crosshair;
 }
 
 /* ══ TESTIMONIALS ══ */
@@ -1258,12 +1296,11 @@ select {
   padding: var(--space-lg) 0;
 }
 
-.service-detail--reverse {
-  direction: rtl;
+.service-detail--reverse .service-detail__visual {
+  order: 2;
 }
-
-.service-detail--reverse > * {
-  direction: ltr;
+.service-detail--reverse .service-detail__content {
+  order: 1;
 }
 
 .service-detail__visual {
@@ -1538,6 +1575,31 @@ select {
 }
 
 /* ══ TEAM ══ */
+.team__photo {
+  margin-bottom: var(--space-lg);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.team__image {
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+  object-fit: cover;
+  display: block;
+  will-change: transform, filter;
+  cursor: crosshair;
+}
+
+.team__caption {
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--color-gray-mid);
+  margin-top: var(--space-sm);
+  font-style: italic;
+}
+
 .team {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -1707,13 +1769,6 @@ select {
   padding: var(--space-md);
   min-height: 250px;
   border: 1px solid rgba(0, 0, 0, 0.04);
-}
-
-.contact__map svg {
-  width: 100%;
-  max-width: 400px;
-  height: auto;
-  color: var(--color-gray-mid);
 }
 
 /* Form */
