@@ -827,7 +827,7 @@
     if (el('.whatsapp-float')) return;
     const a = document.createElement('a');
     a.className = 'whatsapp-float';
-    a.href = 'https://wa.me/573000000000';
+    a.href = 'https://w.app/fumigacionesmagistral';
     a.target = '_blank';
     a.rel = 'noopener';
     a.setAttribute('aria-label', 'Contactar por WhatsApp');
