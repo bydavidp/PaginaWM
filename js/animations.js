@@ -165,13 +165,11 @@
   /* ───────── 3. HERO TITLE — FADE-IN ESCALONADO (preserva HTML) ───────── */
   function heroTextStagger() {
     const title = el('.hero__title');
-    const subtitle = el('.hero__subtitle');
     const badge = el('.hero__badge');
     const actions = el('.hero__actions');
 
     if (badge) badge.classList.remove('animate');
     if (title) title.classList.remove('animate');
-    if (subtitle) subtitle.classList.remove('animate');
     if (actions) actions.classList.remove('animate');
 
     const timeline = anime.timeline({ easing: 'easeOutExpo' });
@@ -210,15 +208,6 @@
         duration: 500,
         delay: anime.stagger(60),
       }, 400);
-    }
-
-    if (subtitle) {
-      timeline.add({
-        targets: subtitle,
-        opacity: [0, 1],
-        translateY: [20, 0],
-        duration: 700,
-      }, 1200);
     }
 
     if (actions) {
@@ -282,6 +271,27 @@
         easing: 'easeOutQuad',
       });
     });
+  }
+
+  /* ───────── 4c2. HERO TYPING — EFECTO TYPEWRITER ───────── */
+  function heroTyping() {
+    const el = document.getElementById('hero-typing');
+    if (!el) return;
+    const text = el.getAttribute('data-text') || '';
+    if (!text) return;
+    let index = 0;
+    el.textContent = '';
+    el.style.opacity = '1';
+    el.style.visibility = 'visible';
+    function type() {
+      if (index < text.length) {
+        el.textContent += text.charAt(index);
+        index++;
+        const delay = text.charAt(index - 1) === '.' || text.charAt(index - 1) === ',' ? 80 : 30 + Math.random() * 20;
+        setTimeout(type, delay);
+      }
+    }
+    setTimeout(type, 1500);
   }
 
   /* ───────── 4d. BENEFITS IMAGE — REVELACIÓN CON ZOOM + FLOTACIÓN ───────── */
@@ -377,8 +387,9 @@
 
   /* ───────── 5. CONTADORES CON REBOTE ELÁSTICO ───────── */
   function counterElastic() {
-    onVisibleEach('.counter__number', (el) => {
+    onVisibleEach('[data-counter]', (el) => {
       const target = parseFloat(el.dataset.target) || 0;
+      const suffix = el.getAttribute('data-suffix') || '';
       const hasDecimal = target % 1 !== 0;
       anime({
         targets: el,
@@ -389,10 +400,10 @@
         easing: 'easeOutElastic(1, .6)',
         update: (anim) => {
           const val = anim.animations[0].currentValue;
-          el.textContent = hasDecimal ? parseFloat(val).toFixed(1) : Math.floor(val).toString();
+          el.textContent = (hasDecimal ? parseFloat(val).toFixed(1) : Math.floor(val).toString()) + suffix;
         },
         complete: () => {
-          el.textContent = hasDecimal ? target.toFixed(1) : target.toString();
+          el.textContent = target.toString() + suffix;
           anime({
             targets: el,
             filter: ['brightness(2)', 'brightness(1)'],
@@ -404,6 +415,37 @@
         },
       });
     }, 0.4);
+  }
+
+  /* ───────── 5b. COUNTER — VANILLA JS FALLBACK (si anime.js no carga) ───────── */
+  function animateCounter(el) {
+    const target = parseInt(el.getAttribute('data-target') || el.innerText);
+    const suffix = el.getAttribute('data-suffix') || '';
+    const duration = 2000;
+    const step = target / (duration / 16);
+    let current = 0;
+    const timer = setInterval(() => {
+      current += step;
+      if (current >= target) {
+        el.textContent = target + suffix;
+        clearInterval(timer);
+      } else {
+        el.textContent = Math.floor(current) + suffix;
+      }
+    }, 16);
+  }
+
+  function vanillaCounterFallback() {
+    if (typeof anime !== 'undefined') return;
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !entry.target.classList.contains('counted')) {
+          entry.target.classList.add('counted');
+          animateCounter(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('[data-counter]').forEach(el => obs.observe(el));
   }
 
   /* ───────── 6. SERVICE CARDS — STAGGER + HOVER WAVE ───────── */
@@ -1198,11 +1240,13 @@
     heroVisualReveal();
     heroImageFloat();
     heroImageHover();
+    heroTyping();
     benefitsImageReveal();
     benefitsImageHover();
     teamImageReveal();
     teamImageHover();
     counterElastic();
+    vanillaCounterFallback();
     serviceCardsAnime();
     benefitIcons3d();
     testimonialStarsGlow();
