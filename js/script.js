@@ -297,6 +297,162 @@ function initSmoothScroll() {
   });
 }
 
+/* ══ COTIZADOR AUTOMÁTICO ══ */
+
+const PRECIOS_BASE = {
+  residencial: 80000,
+  comercial: 150000,
+  roedores: 120000,
+  insectos: 90000,
+  preventivo: 60000,
+  certificado: 100000
+};
+
+function initCotizador() {
+  const tipo = document.getElementById('cot-tipo');
+  const metros = document.getElementById('cot-metros');
+  const metrosRange = document.getElementById('cot-metros-range');
+  const urgente = document.getElementById('cot-urgente');
+  const garantia = document.getElementById('cot-garantia');
+  const calcular = document.getElementById('cot-calcular');
+  const resultado = document.getElementById('cot-resultado');
+  const precioEl = document.getElementById('cot-precio');
+  const detalle = document.getElementById('cot-detalle');
+  const waBtn = document.getElementById('cot-wa-btn');
+
+  if (!tipo || !metros || !calcular) return;
+
+  function calcPrecio() {
+    const selec = tipo.options[tipo.selectedIndex];
+    const base = selec ? parseInt(selec.dataset.precio) || 0 : 0;
+    const m = parseInt(metros.value) || 100;
+    const factorMetros = Math.max(1, m / 100);
+    const extraUrgente = urgente?.checked ? 30000 : 0;
+    const extraGarantia = garantia?.checked ? 25000 : 0;
+    const total = Math.round((base * factorMetros) + extraUrgente + extraGarantia);
+    return { total, base, factorMetros, m, extraUrgente, extraGarantia, nombre: selec?.text || 'Sin seleccionar' };
+  }
+
+  function actualizar() {
+    const data = calcPrecio();
+    if (data.base === 0 || !data.base) {
+      resultado.style.display = 'none';
+      return;
+    }
+    resultado.style.display = 'flex';
+    precioEl.textContent = '$' + data.total.toLocaleString('es-CO');
+    detalle.innerHTML = `
+      <div>${data.nombre}</div>
+      <div>${data.m} m² x $${data.base.toLocaleString('es-CO')}/100m²</div>
+      ${data.extraUrgente ? '<div>+ Servicio urgente: $30,000</div>' : ''}
+      ${data.extraGarantia ? '<div>+ Garantía extendida: $25,000</div>' : ''}
+    `;
+    const msg = encodeURIComponent(
+      `Hola! Quiero una cotización:%0A` +
+      `Servicio: ${data.nombre}%0A` +
+      `Metros: ${data.m} m²%0A` +
+      `Precio estimado: $${data.total.toLocaleString('es-CO')}%0A` +
+      `${data.extraUrgente ? 'Urgente: Sí%0A' : ''}` +
+      `${data.extraGarantia ? 'Garantía extendida: Sí%0A' : ''}` +
+      `¿Podemos agendar una visita?`
+    );
+    waBtn.href = `https://w.app/fumigacionesmagistral?text=${msg}`;
+  }
+
+  tipo.addEventListener('change', actualizar);
+  metros.addEventListener('input', () => { metrosRange.value = metros.value; actualizar(); });
+  metrosRange.addEventListener('input', () => { metros.value = metrosRange.value; actualizar(); });
+  urgente?.addEventListener('change', actualizar);
+  garantia?.addEventListener('change', actualizar);
+  calcular.addEventListener('click', actualizar);
+}
+
+/* ══ GALERÍA Y LIGHTBOX ══ */
+
+function initGaleria() {
+  const filtros = document.querySelectorAll('.galeria__filter-btn');
+  const items = document.querySelectorAll('.galeria__item');
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+  const lightboxCaption = document.getElementById('lightbox-caption');
+  let currentIndex = 0;
+
+  if (!filtros.length || !items.length) return;
+
+  // Filtros
+  filtros.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const filter = btn.dataset.filter;
+      filtros.forEach(b => b.classList.remove('galeria__filter-btn--active'));
+      btn.classList.add('galeria__filter-btn--active');
+      items.forEach(item => {
+        if (filter === 'all' || item.dataset.categoria === filter) {
+          item.style.display = 'block';
+          anime({ targets: item, opacity: [0, 1], duration: 400, easing: 'easeOutQuad' });
+        } else {
+          anime({ targets: item, opacity: [1, 0], duration: 300, easing: 'easeOutQuad', complete: () => { item.style.display = 'none'; } });
+        }
+      });
+      // Recalcular grid items visibles
+      const visible = document.querySelectorAll('.galeria__item[style*="display: block"], .galeria__item:not([style*="display"])');
+      updateGrid(visible.length);
+    });
+  });
+
+  function updateGrid(count) {
+    const grid = document.querySelector('.galeria__grid');
+    if (count === 1) grid.style.gridTemplateColumns = '1fr';
+    else if (count === 2) grid.style.gridTemplateColumns = 'repeat(2, 1fr)';
+    else grid.style.gridTemplateColumns = 'repeat(3, 1fr)';
+  }
+
+  // Lightbox
+  items.forEach((item, i) => {
+    item.addEventListener('click', () => {
+      const img = item.querySelector('.galeria__img');
+      currentIndex = i;
+      openLightbox(img.src, img.alt);
+    });
+  });
+
+  function openLightbox(src, alt) {
+    const visibleItems = Array.from(document.querySelectorAll('.galeria__item')).filter(it => it.style.display !== 'none');
+    lightboxImg.src = src;
+    lightboxImg.alt = alt;
+    lightboxCaption.textContent = alt;
+    lightbox.classList.add('lightbox--open');
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', onKeydown);
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('lightbox--open');
+    document.body.style.overflow = '';
+    document.removeEventListener('keydown', onKeydown);
+  }
+
+  function onKeydown(e) {
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') navigate(-1);
+    if (e.key === 'ArrowRight') navigate(1);
+  }
+
+  function navigate(dir) {
+    const visibleItems = Array.from(document.querySelectorAll('.galeria__item')).filter(it => it.style.display !== 'none');
+    if (!visibleItems.length) return;
+    currentIndex = (currentIndex + dir + visibleItems.length) % visibleItems.length;
+    const img = visibleItems[currentIndex].querySelector('.galeria__img');
+    lightboxImg.src = img.src;
+    lightboxImg.alt = img.alt;
+    lightboxCaption.textContent = img.alt;
+  }
+
+  document.querySelector('.lightbox__close')?.addEventListener('click', closeLightbox);
+  document.querySelector('.lightbox__nav--prev')?.addEventListener('click', () => navigate(-1));
+  document.querySelector('.lightbox__nav--next')?.addEventListener('click', () => navigate(1));
+  lightbox?.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+}
+
 /* ══ INIT ══ */
 
 /**
@@ -308,6 +464,8 @@ function init() {
   initFormValidation();
   setActiveNavLink();
   initSmoothScroll();
+  initCotizador();
+  initGaleria();
 
   if (typeof initAnimations === 'function') {
     initAnimations();
