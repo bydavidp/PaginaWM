@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+  <defs><linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#CC0000"/><stop offset="100%" stop-color="#880000"/></linearGradient></defs>
+  <rect width="400" height="300" fill="url(#g1)" rx="8"/>
+  <rect x="140" y="100" width="120" height="90" rx="4" fill="none" stroke="#fff" stroke-width="3" opacity="0.8"/>
+  <polygon points="120,115 200,60 280,115" fill="none" stroke="#fff" stroke-width="3" opacity="0.8"/>
+  <rect x="175" y="140" width="50" height="50" rx="2" fill="#fff" opacity="0.3"/>
+  <text x="200" y="230" text-anchor="middle" fill="#fff" font-size="18" font-weight="700" font-family="Inter,sans-serif">Residencial</text>
+  <text x="200" y="255" text-anchor="middle" fill="#fff" font-size="13" opacity="0.8" font-family="Inter,sans-serif">Antes / Después</text>
+</svg>
