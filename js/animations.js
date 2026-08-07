@@ -1276,7 +1276,8 @@
   function revealFailsafe() {
     const forceVisible = () => {
       const criticos = document.querySelectorAll(
-        '.hero__badge, .hero__title, .hero__word, .hero__subtitle, .hero__actions, .hero__proof, .hero__visual'
+        '.hero__badge, .hero__title, .hero__word, .hero__subtitle, ' +
+        '.hero__actions, .hero__actions > *, .hero__proof, .hero__visual'
       );
       criticos.forEach((n) => {
         if (parseFloat(getComputedStyle(n).opacity) < 0.9) {
