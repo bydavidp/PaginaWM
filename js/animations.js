@@ -75,6 +75,7 @@
   function heroFumigationFog() {
     const hero = el('#hero');
     if (!hero) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const canvas = document.createElement('canvas');
     canvas.className = 'hero__particles';
@@ -91,8 +92,9 @@
     resize();
     window.addEventListener('resize', resize);
 
-    /* 400 partículas formando una nube densa en el centro */
-    const count = 400;
+    /* Nube densa en el centro. La densidad baja en pantallas pequeñas:
+       este efecto corre justo cuando el móvil está pintando el hero. */
+    const count = window.innerWidth < 640 ? 110 : window.innerWidth < 1024 ? 220 : 380;
     const particles = [];
     const cx = w / 2, cy = h / 2;
     const maxDist = Math.max(w, h) * 0.6;
@@ -125,7 +127,7 @@
         if (elapsed < p.delay) {
           ctx.beginPath();
           ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(204, 0, 0, ${p.alpha * 0.6})`;
+          ctx.fillStyle = `rgba(225, 29, 46, ${p.alpha * 0.6})`;
           ctx.fill();
           return;
         }
@@ -140,7 +142,7 @@
         if (a > 0.01) {
           ctx.beginPath();
           ctx.arc(px, py, radius, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(204, 0, 0, ${a})`;
+          ctx.fillStyle = `rgba(225, 29, 46, ${a})`;
           ctx.fill();
         }
       });
@@ -479,7 +481,7 @@
           targets: card,
           boxShadow: [
             '0 4px 12px rgba(0,0,0,0.1)',
-            '0 8px 40px rgba(204,0,0,0.3)',
+            '0 8px 40px rgba(225,29,46,0.3)',
           ],
           duration: 400,
           easing: 'easeOutQuad',
@@ -543,9 +545,9 @@
         targets: dot,
         scale: [1, 1.3, 1],
         boxShadow: [
-          '0 2px 12px rgba(204,0,0,0.3)',
-          '0 4px 24px rgba(204,0,0,0.6)',
-          '0 2px 12px rgba(204,0,0,0.3)',
+          '0 2px 12px rgba(225,29,46,0.3)',
+          '0 4px 24px rgba(225,29,46,0.6)',
+          '0 2px 12px rgba(225,29,46,0.3)',
         ],
         duration: 1200,
         loop: true,
@@ -587,7 +589,7 @@
       anime({
         targets: btn,
         scale: [1, 1.03],
-        boxShadow: ['0 4px 15px rgba(204,0,0,0.3)', '0 8px 30px rgba(204,0,0,0.5)'],
+        boxShadow: ['0 4px 15px rgba(225,29,46,0.3)', '0 8px 30px rgba(225,29,46,0.5)'],
         duration: 300,
         easing: 'easeOutQuad',
       });
@@ -596,7 +598,7 @@
       anime({
         targets: btn,
         scale: [1.03, 1],
-        boxShadow: ['0 8px 30px rgba(204,0,0,0.5)', '0 4px 15px rgba(204,0,0,0.3)'],
+        boxShadow: ['0 8px 30px rgba(225,29,46,0.5)', '0 4px 15px rgba(225,29,46,0.3)'],
         duration: 300,
         easing: 'easeOutQuad',
       });
@@ -704,7 +706,7 @@
       row.addEventListener('mouseenter', () => {
         anime({
           targets: row,
-          backgroundColor: ['rgba(204,0,0,0)', 'rgba(204,0,0,0.03)'],
+          backgroundColor: ['rgba(225,29,46,0)', 'rgba(225,29,46,0.03)'],
           duration: 300,
           easing: 'easeOutQuad',
         });
@@ -798,41 +800,15 @@
      ANIMACIONES GRANDES / DRAMÁTICAS
      ═══════════════════════════════════════ */
 
-  /* ───────── 25. ESCUDO 3D ROTATORIO EN HERO ───────── */
-  function rotatingShield3D() {
-    const visual = el('.hero__visual svg');
-    if (!visual) return;
-
-    visual.style.transformStyle = 'preserve-3d';
-    visual.style.perspective = '800px';
-
-    anime({
-      targets: visual,
-      rotateY: [0, 360],
-      duration: 15000,
-      loop: true,
-      easing: 'linear',
-    });
-
-    anime({
-      targets: visual,
-      translateY: [0, -12, 0],
-      scale: [1, 1.03, 1],
-      duration: 3500,
-      loop: true,
-      easing: 'easeInOutSine',
-    });
-  }
-
   /* ───────── 26. ONDAS DE PULSO EXPANSIVAS ───────── */
   function pulseWaveEffect() {
     const hero = el('#hero');
     if (!hero) return;
 
     const colors = [
-      'rgba(204, 0, 0, 0.12)',
-      'rgba(212, 168, 71, 0.08)',
-      'rgba(204, 0, 0, 0.06)',
+      'rgba(225, 29, 46, 0.12)',
+      'rgba(0, 184, 132, 0.10)',
+      'rgba(225, 29, 46, 0.06)',
     ];
 
     colors.forEach((color, i) => {
@@ -863,27 +839,6 @@
   /* ═══════════════════════════════════════
      NUEVOS COMPONENTES — GRANDES IDEAS
      ═══════════════════════════════════════ */
-
-  /* ───────── A. WHATSAPP FLOTANTE ───────── */
-  function whatsappFloat() {
-    if (el('.whatsapp-float')) return;
-    const a = document.createElement('a');
-    a.className = 'whatsapp-float';
-    a.href = 'https://w.app/fumigacionesmagistral';
-    a.target = '_blank';
-    a.rel = 'noopener';
-    a.setAttribute('aria-label', 'Contactar por WhatsApp');
-    a.innerHTML = '<svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>';
-    document.body.appendChild(a);
-
-    anime({
-      targets: a,
-      scale: [1, 1.08, 1],
-      duration: 2000,
-      loop: true,
-      easing: 'easeInOutSine',
-    });
-  }
 
   /* ───────── B. BARRA DE PROGRESO ───────── */
   function scrollProgress() {
@@ -968,7 +923,7 @@
       const p = document.createElement('div');
       p.className = 'mouse-particle';
       const size = Math.random() * 4 + 2;
-      p.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX + (Math.random() - 0.5) * 20}px;top:${e.clientY + (Math.random() - 0.5) * 20}px;background:rgba(204,0,0,${Math.random() * 0.4 + 0.2})`;
+      p.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX + (Math.random() - 0.5) * 20}px;top:${e.clientY + (Math.random() - 0.5) * 20}px;background:rgba(225,29,46,${Math.random() * 0.4 + 0.2})`;
       document.body.appendChild(p);
       anime({
         targets: p,
@@ -989,7 +944,7 @@
 
   /* ───────── F. CONFETI EN CONTADORES ───────── */
   function burstConfetti(x, y) {
-    const colors = ['#CC0000', '#D4A847', '#FF4444', '#F0D78C', '#FFFFFF'];
+    const colors = ['#E11D2E', '#00B884', '#FF5566', '#FFB020', '#FFFFFF'];
     for (let i = 0; i < 24; i++) {
       const piece = document.createElement('div');
       piece.className = 'confetti-piece';
@@ -1113,11 +1068,13 @@
     overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('active'); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') overlay.classList.remove('active'); });
 
-    els('.service-card__link').forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const card = link.closest('.service-card');
-        if (!card) return;
+    /* El modal es un extra: se abre al tocar la tarjeta, pero el enlace
+       "Ver más →" navega de verdad a services.html#ancla. Interceptarlo
+       rompía la navegación interna y el enlazado interno para SEO. */
+    els('.service-card').forEach(card => {
+      card.addEventListener('click', (e) => {
+        if (e.target.closest('a')) return;
+
         const title = card.querySelector('.service-card__title')?.textContent || 'Servicio';
         const desc = card.querySelector('.service-card__desc')?.textContent || '';
         const iconHTML = card.querySelector('.service-card__icon')?.innerHTML || '';
@@ -1135,12 +1092,16 @@
               <div class="modal__feature"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 9 7 13 15 5"/></svg><span>Garantía de resultados</span></div>
             </div>`;
         }
+        const detalleHref = card.querySelector('.service-card__link')?.getAttribute('href') || 'services.html';
+        const waMsg = encodeURIComponent(`Hola, quiero una cotización de ${title} en Cali.`);
+
         body.innerHTML = `
           <div class="modal__icon">${iconHTML}</div>
           <h3 class="modal__title">${title}</h3>
           <p class="modal__desc">${desc}</p>
           ${featuresHTML}
-          <a href="contact.html" class="btn btn--primary modal__cta">Solicitar Cotización</a>
+          <a href="https://wa.me/573147781700?text=${waMsg}" target="_blank" rel="noopener" class="btn btn--whatsapp modal__cta">Cotizar por WhatsApp</a>
+          <a href="${detalleHref}" class="btn btn--secondary-dark modal__cta" style="margin-top:.625rem;">Ver detalles del servicio</a>
         `;
         overlay.classList.add('active');
         anime({
@@ -1194,7 +1155,7 @@
   function pageTransition() {
     const overlay = document.createElement('div');
     overlay.className = 'page-transition';
-    overlay.innerHTML = '<svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="18" stroke="#CC0000" stroke-width="2.5" fill="none"/><path d="M20 8 L20 14 M20 26 L20 32 M8 20 L14 20 M26 20 L32 20" stroke="#CC0000" stroke-width="2.5" stroke-linecap="round"/><circle cx="20" cy="20" r="4" fill="#CC0000"/></svg>';
+    overlay.innerHTML = '<svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="18" stroke="#E11D2E" stroke-width="2.5" fill="none"/><path d="M20 8 L20 14 M20 26 L20 32 M8 20 L14 20 M26 20 L32 20" stroke="#E11D2E" stroke-width="2.5" stroke-linecap="round"/><circle cx="20" cy="20" r="4" fill="#E11D2E"/></svg>';
     document.body.appendChild(overlay);
 
     document.addEventListener('click', (e) => {
@@ -1234,7 +1195,6 @@
     /* específicas */
     logoPulse();
     heroFumigationFog();
-    rotatingShield3D();
     pulseWaveEffect();
     heroTextStagger();
     heroVisualReveal();
@@ -1270,7 +1230,6 @@
     navTilt3D();
 
     /* nuevos componentes grandes */
-    whatsappFloat();
   scrollProgress();
   backToTop();
   svgDraw();
