@@ -171,10 +171,15 @@
     const actions = el('.hero__actions');
 
     if (badge) badge.classList.remove('animate');
-    if (title) title.classList.remove('animate');
+    if (title) { title.classList.remove('animate'); title.classList.add('hero__title--animating'); }
     if (actions) actions.classList.remove('animate');
 
-    const timeline = anime.timeline({ easing: 'easeOutExpo' });
+    const timeline = anime.timeline({
+      easing: 'easeOutExpo',
+      complete: function() {
+        if (title) title.classList.remove('hero__title--animating');
+      }
+    });
 
     if (badge) {
       timeline.add({
@@ -1254,6 +1259,31 @@
     cookieConsent();
     pageTransition();
     magneticButtons();
+
+    /* Red de seguridad: si las animaciones no terminan en 2.6s,
+       forzar visibilidad de contenido crítico */
+    safetyNetTimeout();
+  }
+
+  /* ───────── SAFETY NET ───────── */
+  function safetyNetTimeout() {
+    const CRITICAL_SELECTORS = [
+      '.hero__title',
+      '.hero__badge',
+      '.hero__actions',
+      '.hero__proof',
+      '.hero__visual',
+      '.hero__subtitle',
+      '.counter__number'
+    ];
+    setTimeout(function() {
+      CRITICAL_SELECTORS.forEach(function(sel) {
+        var els = document.querySelectorAll(sel);
+        els.forEach(function(el) { el.classList.add('force-visible'); });
+      });
+      var title = document.querySelector('.hero__title');
+      if (title) title.classList.remove('hero__title--animating');
+    }, 2600);
   }
 
   if (typeof module !== 'undefined' && module.exports) {

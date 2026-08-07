@@ -412,6 +412,9 @@ input, textarea, select { font-family: inherit; font-size: inherit; color: inher
   height: var(--nav-h);
   display: flex;
   align-items: center;
+  background: rgba(11, 14, 20, 0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   transition: height var(--transition-base),
               background-color var(--transition-base),
               box-shadow var(--transition-base);
@@ -625,6 +628,13 @@ input, textarea, select { font-family: inherit; font-size: inherit; color: inher
 }
 
 .hero__word { display: inline-block; white-space: nowrap; }
+
+/* Red de seguridad: si JS falla o se congela, el contenido crítico sigue visible */
+.hero__title:not(.hero__title--animating) .hero__word,
+.force-visible { opacity: 1 !important; transform: none !important; }
+.hero__badge.force-visible,
+.hero__actions.force-visible,
+.hero__proof.force-visible { opacity: 1 !important; transform: none !important; }
 
 .hero__subtitle {
   font-size: var(--text-lg);
