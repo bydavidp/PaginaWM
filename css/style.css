@@ -2091,6 +2091,37 @@ input, textarea, select { font-family: inherit; font-size: inherit; color: inher
 .page-transition svg { width: 48px; height: 48px; animation: transitionPulse 0.6s ease-in-out infinite; }
 @keyframes transitionPulse { 0%, 100% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.18); opacity: 1; } }
 
+/* ══════════ 35b. AJUSTES DE CONTRASTE ══════════
+   Las tarjetas blancas sobre secciones blancas se pierden.
+   En secciones sin fondo propio usan el gris suave. */
+.section:not(.section--light):not(.section--dark) :is(
+  .value-card,
+  .guarantee__item,
+  .benefit-item,
+  .team__member,
+  .certifications__item,
+  .service-card,
+  .faq-item
+) {
+  background: var(--color-gray-light);
+  border-color: transparent;
+}
+
+.section:not(.section--light):not(.section--dark) :is(
+  .value-card,
+  .guarantee__item,
+  .benefit-item,
+  .team__member,
+  .certifications__item,
+  .service-card,
+  .faq-item
+):hover {
+  background: var(--color-white);
+}
+
+/* El mapa embebido debe llenar su contenedor */
+.contact__map iframe { height: 100% !important; min-height: 280px; }
+
 /* ══════════ 36. RESPONSIVE ══════════ */
 @media (max-width: 1023px) {
   :root { --nav-h: 68px; }

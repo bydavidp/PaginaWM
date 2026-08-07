@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.fumigacionesmagistral.com/sitemap.xml
+Sitemap: https://bydavidp.github.io/PaginaWM/sitemap.xml
