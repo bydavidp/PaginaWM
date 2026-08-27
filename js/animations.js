@@ -1,7 +1,7 @@
 (function () {
 
   /* ═══════════════════════════════════════
-     FUMIGACIONES MAGISTRAL — ANIMATIONS.JS
+     FUMIGACIONES MAGISTRALES DEL VALLE — ANIMATIONS.JS
      Animaciones temáticas con Anime.js + Intersection Observer
      ═══════════════════════════════════════ */
 

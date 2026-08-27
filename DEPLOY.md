@@ -71,19 +71,19 @@ antes de `</head>` en las cuatro páginas.
 
 ## 5. Cuando compres el dominio propio
 
-Un dominio propio (`fumigacionesmagistral.com`) da mucha más confianza que una
+Un dominio propio (`fumigacionesmagistralesdelvalle.com`) da mucha más confianza que una
 URL de github.io. Cuando lo tengas:
 
 1. Crea un archivo `CNAME` en la raíz del repo con una sola línea:
    ```
-   www.fumigacionesmagistral.com
+   www.fumigacionesmagistralesdelvalle.com
    ```
 2. En tu proveedor de dominio, crea un registro `CNAME` de `www` →
    `bydavidp.github.io`.
 3. En Settings → Pages, pon el dominio en **Custom domain** y marca
    **Enforce HTTPS**.
 4. Reemplaza `https://bydavidp.github.io/PaginaWM/` por
-   `https://www.fumigacionesmagistral.com/` en:
+   `https://www.fumigacionesmagistralesdelvalle.com/` en:
    - `index.html`, `services.html`, `about.html`, `contact.html`
      (canonical, `og:url`, `og:image` y los bloques `application/ld+json`)
    - `sitemap.xml`

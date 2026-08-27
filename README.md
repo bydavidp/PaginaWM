@@ -1,4 +1,4 @@
-# Fumigaciones Magistral — FM
+# Fumigaciones Magistrales Del Valle
 
 > Sitio web premium para empresa de fumigación y control de plagas en Santiago de Cali.
 >
@@ -162,4 +162,4 @@ script.js
 
 ## 📄 Licencia
 
-Uso interno. Todos los derechos reservados — Fumigaciones Magistral FM
+Uso interno. Todos los derechos reservados — Fumigaciones Magistrales Del Valle
