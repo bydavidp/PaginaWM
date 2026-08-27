@@ -2238,3 +2238,211 @@ input, textarea, select { font-family: inherit; font-size: inherit; color: inher
   body { padding-bottom: 0; color: #000; }
   .section--dark, .cta-banner, .hero { background: #fff !important; color: #000 !important; }
 }
+
+/* ══════════════════════════════════════════════════════════
+   37. FOTOS REALES DE SERVICIOS
+   Collage del hero, fotos en tarjetas y detalle de servicios,
+   galería tipo mosaico y videos. (Agregado con las fotos reales)
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Collage del hero ── */
+.hero__collage {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 540px;
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  grid-template-rows: repeat(2, 1fr);
+  gap: 0.75rem;
+  aspect-ratio: 5 / 4;
+}
+.hero__collage figure {
+  margin: 0;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.09);
+}
+.hero__collage-main { grid-row: span 2; }
+.hero__collage img {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+  transition: transform var(--transition-slow);
+}
+.hero__collage figure:hover img { transform: scale(1.05); }
+.hero__collage-badge {
+  position: absolute;
+  left: 50%;
+  bottom: -0.85rem;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  background: var(--color-white);
+  color: var(--color-gray-dark);
+  font-size: var(--text-xs);
+  font-weight: 650;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-full);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.32);
+}
+.hero__collage-badge strong { color: var(--color-red); font-weight: 800; }
+
+/* ── Foto en las tarjetas de servicio ── */
+.service-card__media {
+  align-self: stretch;
+  margin: -1.75rem -1.75rem 0.25rem;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  background: var(--color-gray-light);
+}
+.service-card__media img {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+  transition: transform var(--transition-slow);
+}
+.service-card:hover .service-card__media img { transform: scale(1.07); }
+.service-card__media + .service-card__icon {
+  position: relative;
+  z-index: 2;
+  margin-top: -2.5rem;
+  background: var(--color-white);
+  box-shadow: 0 10px 26px rgba(11, 14, 20, 0.16);
+}
+
+/* ── Foto en el detalle de servicio (services.html) ── */
+.service-photo { margin: 0; }
+.service-photo img {
+  width: 100%;
+  max-height: 460px;
+  object-fit: cover;
+  display: block;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+}
+.service-photo__caption {
+  margin-top: 0.7rem;
+  font-size: var(--text-xs);
+  font-weight: 650;
+  color: var(--color-gray-mid);
+  text-align: center;
+}
+
+/* ── Tira de fotos de "nuestro equipo" (about.html) ── */
+.work-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.work-strip__item { margin: 0; }
+.work-strip__item img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+  border-radius: var(--radius-lg);
+}
+.work-strip__item figcaption {
+  margin-top: 0.5rem;
+  font-size: var(--text-xs);
+  font-weight: 650;
+  color: var(--color-gray-mid);
+  text-align: center;
+}
+
+/* ── Galería en mosaico ── */
+.galeria__grid {
+  display: block;
+  columns: 3 260px;
+  column-gap: 1rem;
+}
+.galeria__item {
+  aspect-ratio: auto;
+  break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+  page-break-inside: avoid;
+  display: block;
+  width: 100%;
+  margin: 0 0 1rem;
+}
+.galeria__item:focus-visible {
+  outline: 3px solid var(--color-red);
+  outline-offset: 3px;
+}
+.galeria__img { height: auto; display: block; }
+
+/* ── Videos dentro de la galería ── */
+.galeria__item--video { background: #0B0E14; }
+.galeria__video { width: 100%; height: auto; display: block; }
+.galeria__overlay--fija { opacity: 1; }
+.galeria__play {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 62px; height: 62px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(225, 29, 46, 0.92);
+  color: #fff;
+  pointer-events: none;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+  transition: opacity var(--transition-base), transform var(--transition-base);
+}
+.galeria__play svg { width: 26px; height: 26px; margin-left: 3px; }
+.galeria__item--video:hover .galeria__play { transform: scale(1.08); }
+.galeria__item--video.is-playing .galeria__play,
+.galeria__item--video.is-playing .galeria__overlay--fija { opacity: 0; }
+
+/* En pantallas táctiles no hay hover: el rótulo siempre visible */
+@media (hover: none) {
+  .galeria__overlay { opacity: 1; }
+}
+
+/* ── En móvil sí mostramos las fotos reales (antes eran ilustraciones) ── */
+@media (max-width: 1023px) {
+  .hero__visual { display: flex; }
+  .hero__collage {
+    max-width: 460px;
+    margin-inline: auto;
+    aspect-ratio: 16 / 10;
+    gap: 0.5rem;
+  }
+  .benefits__visual { display: block; }
+  .benefits__visual img { margin-inline: auto; }
+  .service-detail__visual { display: block; }
+  .service-photo img { max-height: 320px; }
+}
+
+@media (max-width: 600px) {
+  .hero__collage {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    aspect-ratio: 4 / 3;
+    max-width: 340px;
+  }
+  .hero__collage-side { display: none; }
+  .hero__collage-main { grid-row: auto; }
+  .galeria__grid { columns: 2 150px; column-gap: 0.6rem; }
+  .galeria__item { margin-bottom: 0.6rem; }
+  .galeria__overlay { padding: 0.7rem; }
+  .galeria__tipo { font-size: var(--text-xs); }
+}
+
+@media print {
+  .galeria__grid { columns: 2; }
+  .galeria__item--video, .galeria__play { display: none; }
+}
+
+/* ── Correcciones de desbordamiento horizontal en móvil ── */
+@media (max-width: 1023px) {
+  /* Las entradas laterales desplazaban 36px y generaban scroll horizontal */
+  .animate--left,
+  .animate--right { transform: translateY(28px); }
+
+  /* El correo largo estiraba la columna de contacto */
+  .contact > * { min-width: 0; }
+  .contact__card,
+  .contact__card a,
+  .contact__card p { overflow-wrap: anywhere; }
+}

@@ -94,7 +94,7 @@ URL de github.io. Cuando lo tengas:
 
 ## Pendientes de contenido
 
-- **Fotos reales en la galería.** `img/galeria/placeholder-*.svg` son marcadores.
+- **Fotos reales en la galería.** Ya integradas en `img/servicios/` (23 fotos + 2 videos en `img/video/`). Para agregar más: exportar a `img/servicios/NOMBRE.jpg` (max 1400px) y su miniatura a `img/servicios/thumb/NOMBRE.jpg` (max 700px), y sumar el `<figure class="galeria__item">` correspondiente en `index.html`.
   Seis fotos de trabajos reales (antes/después funcionan muy bien) convierten
   bastante más que ilustraciones genéricas.
 - **Precios del cotizador.** Están en `index.html`, en los `data-precio` del

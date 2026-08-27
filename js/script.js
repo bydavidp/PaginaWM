@@ -371,55 +371,101 @@ function initCotizador() {
 
 function initGaleria() {
   const filtros = document.querySelectorAll('.galeria__filter-btn');
-  const items = document.querySelectorAll('.galeria__item');
+  const items = Array.from(document.querySelectorAll('.galeria__item'));
+  const fotos = items.filter(it => !it.classList.contains('galeria__item--video'));
+  const videos = items.filter(it => it.classList.contains('galeria__item--video'));
   const lightbox = document.getElementById('lightbox');
   const lightboxImg = document.getElementById('lightbox-img');
   const lightboxCaption = document.getElementById('lightbox-caption');
   let currentIndex = 0;
 
-  if (!filtros.length || !items.length) return;
+  if (!items.length) return;
 
-  // Filtros
+  /**
+   * @description Desvanece un elemento usando anime.js si está disponible
+   */
+  function fade(el, from, to, done) {
+    if (typeof anime === 'function') {
+      anime({
+        targets: el,
+        opacity: [from, to],
+        duration: to ? 380 : 220,
+        easing: 'easeOutQuad',
+        complete: done
+      });
+    } else {
+      el.style.opacity = to;
+      if (done) done();
+    }
+  }
+
+  function pausarVideo(item) {
+    const v = item.querySelector('.galeria__video');
+    if (v && !v.paused) v.pause();
+    item.classList.remove('is-playing');
+  }
+
+  /* ── Filtros por categoría ── */
   filtros.forEach(btn => {
     btn.addEventListener('click', () => {
       const filter = btn.dataset.filter;
-      filtros.forEach(b => b.classList.remove('galeria__filter-btn--active'));
-      btn.classList.add('galeria__filter-btn--active');
+      filtros.forEach(b => {
+        const activo = b === btn;
+        b.classList.toggle('galeria__filter-btn--active', activo);
+        b.setAttribute('aria-pressed', activo ? 'true' : 'false');
+      });
       items.forEach(item => {
-        if (filter === 'all' || item.dataset.categoria === filter) {
-          item.style.display = 'block';
-          anime({ targets: item, opacity: [0, 1], duration: 400, easing: 'easeOutQuad' });
+        const visible = filter === 'all' || item.dataset.categoria === filter;
+        if (visible) {
+          item.style.display = '';
+          fade(item, 0, 1);
         } else {
-          anime({ targets: item, opacity: [1, 0], duration: 300, easing: 'easeOutQuad', complete: () => { item.style.display = 'none'; } });
+          pausarVideo(item);
+          fade(item, 1, 0, () => { item.style.display = 'none'; });
         }
       });
-      // Recalcular grid items visibles
-      const visible = document.querySelectorAll('.galeria__item[style*="display: block"], .galeria__item:not([style*="display"])');
-      updateGrid(visible.length);
     });
   });
 
-  function updateGrid(count) {
-    const grid = document.querySelector('.galeria__grid');
-    if (count === 1) grid.style.gridTemplateColumns = '1fr';
-    else if (count === 2) grid.style.gridTemplateColumns = 'repeat(2, 1fr)';
-    else grid.style.gridTemplateColumns = 'repeat(3, 1fr)';
+  /* ── Videos: reproducir / pausar al hacer clic ── */
+  videos.forEach(item => {
+    const video = item.querySelector('.galeria__video');
+    if (!video) return;
+    item.addEventListener('click', () => {
+      if (video.paused) {
+        videos.forEach(pausarVideo);
+        item.classList.add('is-playing');
+        const p = video.play();
+        if (p && typeof p.catch === 'function') {
+          p.catch(() => item.classList.remove('is-playing'));
+        }
+      } else {
+        pausarVideo(item);
+      }
+    });
+    video.addEventListener('ended', () => item.classList.remove('is-playing'));
+  });
+
+  /* ── Lightbox ── */
+  if (!lightbox || !lightboxImg) return;
+
+  function fotosVisibles() {
+    return fotos.filter(it => it.style.display !== 'none');
   }
 
-  // Lightbox
-  items.forEach((item, i) => {
-    item.addEventListener('click', () => {
-      const img = item.querySelector('.galeria__img');
-      currentIndex = i;
-      openLightbox(img.src, img.alt);
-    });
-  });
+  function pintar(item) {
+    const img = item.querySelector('.galeria__img');
+    if (!img) return;
+    lightboxImg.src = img.dataset.full || img.src;
+    lightboxImg.alt = img.alt;
+    if (lightboxCaption) lightboxCaption.textContent = img.alt;
+  }
 
-  function openLightbox(src, alt) {
-    const visibleItems = Array.from(document.querySelectorAll('.galeria__item')).filter(it => it.style.display !== 'none');
-    lightboxImg.src = src;
-    lightboxImg.alt = alt;
-    lightboxCaption.textContent = alt;
+  function openLightbox(item) {
+    const visibles = fotosVisibles();
+    const i = visibles.indexOf(item);
+    currentIndex = i < 0 ? 0 : i;
+    pintar(item);
     lightbox.classList.add('lightbox--open');
     document.body.style.overflow = 'hidden';
     document.addEventListener('keydown', onKeydown);
@@ -438,19 +484,26 @@ function initGaleria() {
   }
 
   function navigate(dir) {
-    const visibleItems = Array.from(document.querySelectorAll('.galeria__item')).filter(it => it.style.display !== 'none');
-    if (!visibleItems.length) return;
-    currentIndex = (currentIndex + dir + visibleItems.length) % visibleItems.length;
-    const img = visibleItems[currentIndex].querySelector('.galeria__img');
-    lightboxImg.src = img.src;
-    lightboxImg.alt = img.alt;
-    lightboxCaption.textContent = img.alt;
+    const visibles = fotosVisibles();
+    if (!visibles.length) return;
+    currentIndex = (currentIndex + dir + visibles.length) % visibles.length;
+    pintar(visibles[currentIndex]);
   }
+
+  fotos.forEach(item => {
+    item.addEventListener('click', () => openLightbox(item));
+    item.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openLightbox(item);
+      }
+    });
+  });
 
   document.querySelector('.lightbox__close')?.addEventListener('click', closeLightbox);
   document.querySelector('.lightbox__nav--prev')?.addEventListener('click', () => navigate(-1));
   document.querySelector('.lightbox__nav--next')?.addEventListener('click', () => navigate(1));
-  lightbox?.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+  lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
 }
 
 /* ══ INIT ══ */
