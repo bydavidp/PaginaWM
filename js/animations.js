@@ -1261,29 +1261,40 @@
     magneticButtons();
 
     /* Red de seguridad: si las animaciones no terminan en 2.6s,
-       forzar visibilidad de contenido crítico */
-    safetyNetTimeout();
+       forzar visibilidad de contenido crítico directamente
+       (no depende de clases CSS que podrían no llegar a cargar). */
+    revealFailsafe();
   }
 
-  /* ───────── SAFETY NET ───────── */
-  function safetyNetTimeout() {
-    const CRITICAL_SELECTORS = [
-      '.hero__title',
-      '.hero__badge',
-      '.hero__actions',
-      '.hero__proof',
-      '.hero__visual',
-      '.hero__subtitle',
-      '.counter__number'
-    ];
-    setTimeout(function() {
-      CRITICAL_SELECTORS.forEach(function(sel) {
-        var els = document.querySelectorAll(sel);
-        els.forEach(function(el) { el.classList.add('force-visible'); });
+  /* ───────── RED DE SEGURIDAD ─────────
+     El contenido NUNCA debe depender de que una animación termine.
+     Si anime.js no carga, si el CDN falla, si el navegador congela
+     requestAnimationFrame (pestaña en segundo plano) o si una animación
+     se queda a medias, el texto igual tiene que verse. Esto se ejecuta
+     poco después de la carga y fuerza a visible cualquier elemento que
+     haya quedado transparente. */
+  function revealFailsafe() {
+    const forceVisible = () => {
+      const criticos = document.querySelectorAll(
+        '.hero__badge, .hero__title, .hero__word, .hero__subtitle, ' +
+        '.hero__actions, .hero__actions > *, .hero__proof, .hero__visual'
+      );
+      criticos.forEach((n) => {
+        if (parseFloat(getComputedStyle(n).opacity) < 0.9) {
+          n.style.opacity = '1';
+          n.style.transform = 'none';
+        }
       });
-      var title = document.querySelector('.hero__title');
-      if (title) title.classList.remove('hero__title--animating');
-    }, 2600);
+
+      /* Cualquier .animate que ya esté dentro del viewport y siga oculto */
+      document.querySelectorAll('.animate:not(.visible)').forEach((n) => {
+        const r = n.getBoundingClientRect();
+        if (r.top < window.innerHeight * 1.1 && r.bottom > 0) n.classList.add('visible');
+      });
+    };
+
+    setTimeout(forceVisible, 2600);
+    window.addEventListener('load', () => setTimeout(forceVisible, 1200), { once: true });
   }
 
   if (typeof module !== 'undefined' && module.exports) {
