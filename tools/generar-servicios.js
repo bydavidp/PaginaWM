@@ -109,8 +109,8 @@ const FOOTER = `  <!-- ═══ FOOTER ═══ -->
                 <path d="M15.5 12.5L11 8.5l-2 2-3-3 2-2L4 1.5l-3 3C1 10 6 15 12.5 15l3-2.5z"/>
               </svg>
               <span>
-                <a href="tel:+57${PHONE1}">(+57) 314 778 1700</a><br>
-                <a href="tel:+57${PHONE2}">(+57) 323 799 4005</a>
+                <a href="tel:+${PHONE1}">(+57) 314 778 1700</a><br>
+                <a href="tel:+${PHONE2}">(+57) 323 799 4005</a>
               </span>
             </div>
             <div class="footer__contact-item">
@@ -158,7 +158,7 @@ const FOOTER = `  <!-- ═══ FOOTER ═══ -->
 
   <!-- ═══ CTA FIJO MÓVIL ═══ -->
   <div class="mobile-cta" role="group" aria-label="Contacto rápido">
-    <a href="tel:+57${PHONE1}" class="mobile-cta__btn mobile-cta__btn--call">
+    <a href="tel:+${PHONE1}" class="mobile-cta__btn mobile-cta__btn--call">
       <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M15.5 12.5L11 8.5l-2 2-3-3 2-2L4 1.5l-3 3C1 10 6 15 12.5 15l3-2.5z"/></svg>
       Llamar
     </a>
@@ -364,7 +364,7 @@ function ctaBlock(service) {
               <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20" aria-hidden="true"><path d="${WHATSAPP_SVG_PATH}"/></svg>
               Cotizar por WhatsApp
             </a>
-            <a href="tel:+57${PHONE1}" class="btn btn--secondary btn--large">Llamar ahora</a>
+            <a href="tel:+${PHONE1}" class="btn btn--secondary btn--large">Llamar ahora</a>
           </div>
         </div>
       </div>
