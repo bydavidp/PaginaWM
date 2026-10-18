@@ -21,7 +21,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=4">
+  <link rel="preload" as="style" href="css/style.css?v=5">
+  <link rel="stylesheet" href="css/style.css?v=5">
   <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png">
@@ -224,7 +225,7 @@
         <div class="service-detail animate">
           <div class="service-detail__visual">
             <figure class="service-photo">
-              <img src="img/servicios/fumigacion-archivo-casilleros-cali.jpg" alt="Fumigación de área de archivo y casilleros en un establecimiento en Cali" loading="eager" decoding="async" />
+              <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/fumigacion-archivo-casilleros-cali.avif 525w, img/servicios/fumigacion-archivo-casilleros-cali.avif 1050w" sizes="(max-width: 800px) 100vw, 50vw"><source type="image/webp" srcset="img/servicios/thumb/fumigacion-archivo-casilleros-cali.webp 525w, img/servicios/fumigacion-archivo-casilleros-cali.webp 1050w" sizes="(max-width: 800px) 100vw, 50vw"><img src="img/servicios/fumigacion-archivo-casilleros-cali.jpg" alt="Fumigación de área de archivo y casilleros en un establecimiento en Cali" loading="lazy" decoding="async" /></picture>
               <figcaption class="service-photo__caption">Tratamiento en área de archivo</figcaption>
             </figure>
           </div>
@@ -301,15 +302,15 @@
         </div>
         <div class="gallery-strip animate" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.25rem;">
           <figure class="service-photo">
-            <img src="img/servicios/fumigacion-archivo-casilleros-cali.jpg" alt="Fumigación de archivo y casilleros en Cali" loading="lazy" decoding="async" />
+            <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/fumigacion-archivo-casilleros-cali.avif 525w, img/servicios/fumigacion-archivo-casilleros-cali.avif 1050w" sizes="(max-width: 800px) 100vw, 50vw"><source type="image/webp" srcset="img/servicios/thumb/fumigacion-archivo-casilleros-cali.webp 525w, img/servicios/fumigacion-archivo-casilleros-cali.webp 1050w" sizes="(max-width: 800px) 100vw, 50vw"><img src="img/servicios/fumigacion-archivo-casilleros-cali.jpg" alt="Fumigación de archivo y casilleros en Cali" loading="lazy" decoding="async" /></picture>
             <figcaption class="service-photo__caption">Área de archivo y casilleros</figcaption>
           </figure>
           <figure class="service-photo">
-            <img src="img/servicios/desinfeccion-aula-jardin-infantil-cali.jpg" alt="Desinfección en jardín infantil de Cali" loading="lazy" decoding="async" />
+            <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/desinfeccion-aula-jardin-infantil-cali.avif 700w, img/servicios/desinfeccion-aula-jardin-infantil-cali.avif 1400w" sizes="(max-width: 800px) 100vw, 50vw"><source type="image/webp" srcset="img/servicios/thumb/desinfeccion-aula-jardin-infantil-cali.webp 700w, img/servicios/desinfeccion-aula-jardin-infantil-cali.webp 1400w" sizes="(max-width: 800px) 100vw, 50vw"><img src="img/servicios/desinfeccion-aula-jardin-infantil-cali.jpg" alt="Desinfección en jardín infantil de Cali" loading="lazy" decoding="async" /></picture>
             <figcaption class="service-photo__caption">Jardín infantil, Cali</figcaption>
           </figure>
           <figure class="service-photo">
-            <img src="img/servicios/nebulizacion-zonas-comunes-cali.jpg" alt="Nebulización de zonas comunes en Cali" loading="lazy" decoding="async" />
+            <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/nebulizacion-zonas-comunes-cali.avif 525w, img/servicios/nebulizacion-zonas-comunes-cali.avif 1050w" sizes="(max-width: 800px) 100vw, 50vw"><source type="image/webp" srcset="img/servicios/thumb/nebulizacion-zonas-comunes-cali.webp 525w, img/servicios/nebulizacion-zonas-comunes-cali.webp 1050w" sizes="(max-width: 800px) 100vw, 50vw"><img src="img/servicios/nebulizacion-zonas-comunes-cali.jpg" alt="Nebulización de zonas comunes en Cali" loading="lazy" decoding="async" /></picture>
             <figcaption class="service-photo__caption">Zonas comunes</figcaption>
           </figure>
         </div>
@@ -522,8 +523,8 @@
     </a>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" defer></script>
-  <script src="js/animations.js?v=4" defer></script>
-  <script src="js/script.js?v=4" defer></script>
+  <script src="js/anime-loader.js?v=5" defer></script>
+  <script src="js/animations.js?v=5" defer></script>
+  <script src="js/script.js?v=5" defer></script>
 </body>
 </html>

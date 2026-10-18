@@ -28,12 +28,17 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=4">
+  <link rel="preload" as="style" href="css/style.css?v=5">
+  <link rel="stylesheet" href="css/style.css?v=5">
   <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png">
   <link rel="icon" href="favicon.ico">
-  <link rel="preload" as="image" href="img/servicios/nebulizacion-zonas-comunes-cali.jpg" fetchpriority="high">
+  <link rel="preload" as="image"
+        href="img/servicios/nebulizacion-zonas-comunes-cali.avif"
+        imagesrcset="img/servicios/thumb/nebulizacion-zonas-comunes-cali.avif 525w, img/servicios/nebulizacion-zonas-comunes-cali.avif 1050w"
+        imagesizes="(max-width: 800px) 100vw, 50vw"
+        type="image/avif" fetchpriority="high">
 
   <script type="application/ld+json">
   {
@@ -168,15 +173,13 @@
       <div class="container" style="position:relative;z-index:2;">
         <div class="hero__content">
           <div class="hero__badge animate">
-            <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-              <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zm1 11.5V7.5H7v4h2zm0-6V4H7v1.5h2z"/>
-            </svg>
-            <span>Atención el mismo día en Cali</span>
+            <span class="hero__badge-dot" aria-hidden="true"></span>
+            <span>Atención el mismo día · Urgencias 24/7</span>
           </div>
           <h1 class="hero__title animate">
             Tu casa o negocio <em>libre de plagas</em> — con garantía escrita
           </h1>
-          <p class="hero__subtitle animate" id="hero-typing" data-text="Cucarachas, roedores, comején, zancudos y más. Técnicos certificados, productos seguros para tu familia y mascotas, y certificado sanitario si lo necesitas. Cotiza gratis en menos de 2 minutos."></p>
+          <p class="hero__subtitle animate">Control profesional de <strong class="hero__pest" data-rotating-pest>cucarachas</strong>, roedores, comején, zancudos y más. Técnicos certificados, productos seguros para tu familia y mascotas, y certificado sanitario si lo necesitas. Cotiza gratis en menos de 2 minutos.</p>
           <div class="hero__actions animate">
             <a href="https://wa.me/573147781700?text=Hola%2C%20quiero%20una%20cotizaci%C3%B3n%20de%20fumigaci%C3%B3n%20en%20Cali"
                class="btn btn--primary btn--large" target="_blank" rel="noopener">
@@ -202,19 +205,13 @@
         <div class="hero__visual animate--right">
           <div class="hero__collage">
             <figure class="hero__collage-main">
-              <img src="img/servicios/nebulizacion-zonas-comunes-cali.jpg"
-                   alt="Tecnico de Fumigaciones Magistrales Del Valle nebulizando las zonas comunes de un conjunto residencial en Cali"
-                   width="700" height="933" loading="eager" fetchpriority="high" decoding="async" />
+              <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/nebulizacion-zonas-comunes-cali.avif 525w, img/servicios/nebulizacion-zonas-comunes-cali.avif 1050w" sizes="(max-width: 800px) 100vw, 50vw"><source type="image/webp" srcset="img/servicios/thumb/nebulizacion-zonas-comunes-cali.webp 525w, img/servicios/nebulizacion-zonas-comunes-cali.webp 1050w" sizes="(max-width: 800px) 100vw, 50vw"><img src="img/servicios/nebulizacion-zonas-comunes-cali.jpg" alt="Tecnico de Fumigaciones Magistrales Del Valle nebulizando las zonas comunes de un conjunto residencial en Cali" width="700" height="933" loading="eager" decoding="async" fetchpriority="high" /></picture>
             </figure>
             <figure class="hero__collage-side">
-              <img src="img/servicios/thumb/desinfeccion-gimnasio-cali.jpg"
-                   alt="Desinfeccion y control de plagas en un gimnasio de Cali"
-                   width="514" height="700" loading="eager" decoding="async" />
+              <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/desinfeccion-gimnasio-cali.avif 514w, img/servicios/desinfeccion-gimnasio-cali.avif 828w" sizes="(max-width: 800px) 100vw, 50vw"><source type="image/webp" srcset="img/servicios/thumb/desinfeccion-gimnasio-cali.webp 514w, img/servicios/desinfeccion-gimnasio-cali.webp 828w" sizes="(max-width: 800px) 100vw, 50vw"><img src="img/servicios/thumb/desinfeccion-gimnasio-cali.jpg" alt="Desinfeccion y control de plagas en un gimnasio de Cali" width="514" height="700" loading="lazy" decoding="async" /></picture>
             </figure>
             <figure class="hero__collage-side">
-              <img src="img/servicios/thumb/control-roedores-caja-registro-cali.jpg"
-                   alt="Dos tecnicos aplicando control de roedores en una caja de registro en Cali"
-                   width="525" height="700" loading="eager" decoding="async" />
+              <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/control-roedores-caja-registro-cali.avif 525w, img/servicios/control-roedores-caja-registro-cali.avif 1050w" sizes="(max-width: 800px) 100vw, 50vw"><source type="image/webp" srcset="img/servicios/thumb/control-roedores-caja-registro-cali.webp 525w, img/servicios/control-roedores-caja-registro-cali.webp 1050w" sizes="(max-width: 800px) 100vw, 50vw"><img src="img/servicios/thumb/control-roedores-caja-registro-cali.jpg" alt="Dos tecnicos aplicando control de roedores en una caja de registro en Cali" width="525" height="700" loading="lazy" decoding="async" /></picture>
             </figure>
             <span class="hero__collage-badge">
               <strong>Fotos reales</strong> de servicios realizados
@@ -293,7 +290,7 @@
           <!-- Card 1: Fumigación Residencial -->
           <article class="service-card animate">
             <div class="service-card__media">
-              <img src="img/servicios/thumb/fumigacion-cocina-apartamento-cali.jpg" alt="Fumigación residencial: técnico aplicando tratamiento en la cocina de un apartamento en Cali" loading="lazy" decoding="async" width="700" height="525" />
+              <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/fumigacion-cocina-apartamento-cali.avif 525w, img/servicios/fumigacion-cocina-apartamento-cali.avif 1050w" sizes="(max-width: 800px) 100vw, 50vw"><source type="image/webp" srcset="img/servicios/thumb/fumigacion-cocina-apartamento-cali.webp 525w, img/servicios/fumigacion-cocina-apartamento-cali.webp 1050w" sizes="(max-width: 800px) 100vw, 50vw"><img src="img/servicios/thumb/fumigacion-cocina-apartamento-cali.jpg" alt="Fumigación residencial: técnico aplicando tratamiento en la cocina de un apartamento en Cali" width="700" height="525" loading="lazy" decoding="async" /></picture>
             </div>
             <div class="service-card__icon" aria-hidden="true">
               <svg viewBox="0 0 56 56" fill="currentColor">
@@ -310,7 +307,7 @@
           <!-- Card 2: Fumigación Comercial -->
           <article class="service-card animate">
             <div class="service-card__media">
-              <img src="img/servicios/thumb/desinfeccion-gimnasio-cali.jpg" alt="Fumigación comercial: control de plagas y desinfección en un gimnasio de Cali" loading="lazy" decoding="async" width="700" height="525" />
+              <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/desinfeccion-gimnasio-cali.avif 514w, img/servicios/desinfeccion-gimnasio-cali.avif 828w" sizes="(max-width: 800px) 100vw, 50vw"><source type="image/webp" srcset="img/servicios/thumb/desinfeccion-gimnasio-cali.webp 514w, img/servicios/desinfeccion-gimnasio-cali.webp 828w" sizes="(max-width: 800px) 100vw, 50vw"><img src="img/servicios/thumb/desinfeccion-gimnasio-cali.jpg" alt="Fumigación comercial: control de plagas y desinfección en un gimnasio de Cali" width="700" height="525" loading="lazy" decoding="async" /></picture>
             </div>
             <div class="service-card__icon" aria-hidden="true">
               <svg viewBox="0 0 56 56" fill="currentColor">
@@ -329,7 +326,7 @@
           <!-- Card 3: Insectos rastreros y voladores -->
           <article class="service-card animate">
             <div class="service-card__media">
-              <img src="img/servicios/thumb/gel-cucarachas-mobiliario-cocina-cali.jpg" alt="Aplicación de gel para cucarachas en el mobiliario de una cocina en Cali" loading="lazy" decoding="async" width="700" height="525" />
+              <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/gel-cucarachas-mobiliario-cocina-cali.avif 700w, img/servicios/gel-cucarachas-mobiliario-cocina-cali.avif 1400w" sizes="(max-width: 800px) 100vw, 50vw"><source type="image/webp" srcset="img/servicios/thumb/gel-cucarachas-mobiliario-cocina-cali.webp 700w, img/servicios/gel-cucarachas-mobiliario-cocina-cali.webp 1400w" sizes="(max-width: 800px) 100vw, 50vw"><img src="img/servicios/thumb/gel-cucarachas-mobiliario-cocina-cali.jpg" alt="Aplicación de gel para cucarachas en el mobiliario de una cocina en Cali" width="700" height="525" loading="lazy" decoding="async" /></picture>
             </div>
             <div class="service-card__icon" aria-hidden="true">
               <svg viewBox="0 0 56 56" fill="currentColor">
@@ -351,7 +348,7 @@
           <!-- Card 4: Roedores -->
           <article class="service-card animate">
             <div class="service-card__media">
-              <img src="img/servicios/thumb/cebado-roedores-exteriores-cali.jpg" alt="Instalación de cebos para control de roedores en zonas exteriores en Cali" loading="lazy" decoding="async" width="700" height="525" />
+              <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/cebado-roedores-exteriores-cali.avif 525w, img/servicios/cebado-roedores-exteriores-cali.avif 1050w" sizes="(max-width: 800px) 100vw, 50vw"><source type="image/webp" srcset="img/servicios/thumb/cebado-roedores-exteriores-cali.webp 525w, img/servicios/cebado-roedores-exteriores-cali.webp 1050w" sizes="(max-width: 800px) 100vw, 50vw"><img src="img/servicios/thumb/cebado-roedores-exteriores-cali.jpg" alt="Instalación de cebos para control de roedores en zonas exteriores en Cali" width="700" height="525" loading="lazy" decoding="async" /></picture>
             </div>
             <div class="service-card__icon" aria-hidden="true">
               <svg viewBox="0 0 56 56" fill="currentColor">
@@ -372,7 +369,7 @@
           <!-- Card 5: Tratamientos preventivos y correctivos -->
           <article class="service-card animate">
             <div class="service-card__media">
-              <img src="img/servicios/thumb/control-perimetral-exteriores-cali.jpg" alt="Tratamiento preventivo perimetral en jardines y exteriores en Cali" loading="lazy" decoding="async" width="700" height="525" />
+              <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/control-perimetral-exteriores-cali.avif 525w, img/servicios/control-perimetral-exteriores-cali.avif 1050w" sizes="(max-width: 800px) 100vw, 50vw"><source type="image/webp" srcset="img/servicios/thumb/control-perimetral-exteriores-cali.webp 525w, img/servicios/control-perimetral-exteriores-cali.webp 1050w" sizes="(max-width: 800px) 100vw, 50vw"><img src="img/servicios/thumb/control-perimetral-exteriores-cali.jpg" alt="Tratamiento preventivo perimetral en jardines y exteriores en Cali" width="700" height="525" loading="lazy" decoding="async" /></picture>
             </div>
             <div class="service-card__icon" aria-hidden="true">
               <svg viewBox="0 0 56 56" fill="currentColor">
@@ -390,7 +387,7 @@
           <!-- Card 6: Certificados de fumigación -->
           <article class="service-card animate">
             <div class="service-card__media">
-              <img src="img/servicios/thumb/desinfeccion-banos-institucionales-cali.jpg" alt="Desinfección de baños en un establecimiento comercial de Cali con certificado sanitario" loading="lazy" decoding="async" width="700" height="525" />
+              <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/desinfeccion-banos-institucionales-cali.avif 700w, img/servicios/desinfeccion-banos-institucionales-cali.avif 1400w" sizes="(max-width: 800px) 100vw, 50vw"><source type="image/webp" srcset="img/servicios/thumb/desinfeccion-banos-institucionales-cali.webp 700w, img/servicios/desinfeccion-banos-institucionales-cali.webp 1400w" sizes="(max-width: 800px) 100vw, 50vw"><img src="img/servicios/thumb/desinfeccion-banos-institucionales-cali.jpg" alt="Desinfección de baños en un establecimiento comercial de Cali con certificado sanitario" width="700" height="525" loading="lazy" decoding="async" /></picture>
             </div>
             <div class="service-card__icon" aria-hidden="true">
               <svg viewBox="0 0 56 56" fill="currentColor">
@@ -409,7 +406,7 @@
           <!-- Card 7: Extintores -->
           <article class="service-card animate">
             <div class="service-card__media">
-              <img src="img/servicios/thumb/extintores-mantenimiento-cali.jpg" alt="Recarga y mantenimiento de extintores para conjuntos y empresas en Cali" loading="lazy" decoding="async" width="700" height="394" />
+              <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/extintores-mantenimiento-cali.avif 700w, img/servicios/extintores-mantenimiento-cali.avif 1400w" sizes="(max-width: 800px) 100vw, 50vw"><source type="image/webp" srcset="img/servicios/thumb/extintores-mantenimiento-cali.webp 700w, img/servicios/extintores-mantenimiento-cali.webp 1400w" sizes="(max-width: 800px) 100vw, 50vw"><img src="img/servicios/thumb/extintores-mantenimiento-cali.jpg" alt="Recarga y mantenimiento de extintores para conjuntos y empresas en Cali" width="700" height="394" loading="lazy" decoding="async" /></picture>
             </div>
             <div class="service-card__icon" aria-hidden="true">
               <svg viewBox="0 0 56 56" fill="currentColor">
@@ -487,15 +484,7 @@
             </div>
           </div>
           <div class="benefits__visual animate--right">
-            <img
-              src="img/servicios/aspersion-oficinas-cali.jpg"
-              alt="Tecnico certificado de Fumigaciones Magistrales Del Valle aplicando tratamiento con equipo de aspersion en Cali"
-              class="benefits__image"
-              width="1400"
-              height="1050"
-              loading="lazy"
-              decoding="async"
-            />
+            <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/aspersion-oficinas-cali.avif 700w, img/servicios/aspersion-oficinas-cali.avif 1400w" sizes="(max-width: 800px) 100vw, 50vw"><source type="image/webp" srcset="img/servicios/thumb/aspersion-oficinas-cali.webp 700w, img/servicios/aspersion-oficinas-cali.webp 1400w" sizes="(max-width: 800px) 100vw, 50vw"><img src="img/servicios/aspersion-oficinas-cali.jpg" alt="Tecnico certificado de Fumigaciones Magistrales Del Valle aplicando tratamiento con equipo de aspersion en Cali" class="benefits__image" width="1400" height="1050" loading="lazy" decoding="async" /></picture>
           </div>
         </div>
       </div>
@@ -682,23 +671,21 @@
 
         <div class="galeria__grid">
           <figure class="galeria__item" data-categoria="residencial" tabindex="0" role="button" aria-label="Ampliar: Fumigación de la cocina de un apartamento en Cali">
-            <img src="img/servicios/thumb/fumigacion-cocina-apartamento-cali.jpg" data-full="img/servicios/fumigacion-cocina-apartamento-cali.jpg" alt="Fumigación de la cocina de un apartamento en Cali"
-                 width="525" height="700" loading="lazy" decoding="async" class="galeria__img" />
+            <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/fumigacion-cocina-apartamento-cali.avif 525w, img/servicios/fumigacion-cocina-apartamento-cali.avif 1050w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><source type="image/webp" srcset="img/servicios/thumb/fumigacion-cocina-apartamento-cali.webp 525w, img/servicios/fumigacion-cocina-apartamento-cali.webp 1050w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><img src="img/servicios/thumb/fumigacion-cocina-apartamento-cali.jpg" data-full="img/servicios/fumigacion-cocina-apartamento-cali.jpg" alt="Fumigación de la cocina de un apartamento en Cali" width="525" height="700" class="galeria__img" loading="lazy" decoding="async" /></picture>
             <figcaption class="galeria__overlay">
               <span class="galeria__tag">Residencial</span>
               <span class="galeria__tipo">Cocina de apartamento</span>
             </figcaption>
           </figure>
           <figure class="galeria__item" data-categoria="residencial" tabindex="0" role="button" aria-label="Ampliar: Control de cucarachas bajo el mobiliario de una vivienda en Cali">
-            <img src="img/servicios/thumb/control-cucarachas-cocina-residencial-cali.jpg" data-full="img/servicios/control-cucarachas-cocina-residencial-cali.jpg" alt="Control de cucarachas bajo el mobiliario de una vivienda en Cali"
-                 width="394" height="700" loading="lazy" decoding="async" class="galeria__img" />
+            <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/control-cucarachas-cocina-residencial-cali.avif 394w, img/servicios/control-cucarachas-cocina-residencial-cali.avif 788w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><source type="image/webp" srcset="img/servicios/thumb/control-cucarachas-cocina-residencial-cali.webp 394w, img/servicios/control-cucarachas-cocina-residencial-cali.webp 788w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><img src="img/servicios/thumb/control-cucarachas-cocina-residencial-cali.jpg" data-full="img/servicios/control-cucarachas-cocina-residencial-cali.jpg" alt="Control de cucarachas bajo el mobiliario de una vivienda en Cali" width="394" height="700" class="galeria__img" loading="lazy" decoding="async" /></picture>
             <figcaption class="galeria__overlay">
               <span class="galeria__tag">Residencial</span>
               <span class="galeria__tipo">Control de cucarachas</span>
             </figcaption>
           </figure>
           <div class="galeria__item galeria__item--video" data-categoria="comunes">
-            <video class="galeria__video" src="img/video/fumigacion-perimetral-cali.mp4" poster="img/video/fumigacion-perimetral-cali-poster.jpg"
+            <video class="galeria__video" src="img/video/fumigacion-perimetral-cali.mp4" poster="img/video/fumigacion-perimetral-cali-poster.webp"
                    width="562" height="1000" muted loop playsinline preload="none" aria-label="Video de nebulización perimetral en un conjunto residencial de Cali"></video>
             <span class="galeria__play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
             <div class="galeria__overlay galeria__overlay--fija">
@@ -707,87 +694,77 @@
             </div>
           </div>
           <figure class="galeria__item" data-categoria="residencial" tabindex="0" role="button" aria-label="Ampliar: Aplicación dirigida detrás de electrodomésticos en una vivienda de Cali">
-            <img src="img/servicios/thumb/control-cucarachas-electrodomesticos-cali.jpg" data-full="img/servicios/control-cucarachas-electrodomesticos-cali.jpg" alt="Aplicación dirigida detrás de electrodomésticos en una vivienda de Cali"
-                 width="394" height="700" loading="lazy" decoding="async" class="galeria__img" />
+            <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/control-cucarachas-electrodomesticos-cali.avif 394w, img/servicios/control-cucarachas-electrodomesticos-cali.avif 788w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><source type="image/webp" srcset="img/servicios/thumb/control-cucarachas-electrodomesticos-cali.webp 394w, img/servicios/control-cucarachas-electrodomesticos-cali.webp 788w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><img src="img/servicios/thumb/control-cucarachas-electrodomesticos-cali.jpg" data-full="img/servicios/control-cucarachas-electrodomesticos-cali.jpg" alt="Aplicación dirigida detrás de electrodomésticos en una vivienda de Cali" width="394" height="700" class="galeria__img" loading="lazy" decoding="async" /></picture>
             <figcaption class="galeria__overlay">
               <span class="galeria__tag">Residencial</span>
               <span class="galeria__tipo">Detrás de electrodomésticos</span>
             </figcaption>
           </figure>
           <figure class="galeria__item" data-categoria="comercial" tabindex="0" role="button" aria-label="Ampliar: Fumigación y desinfección de un gimnasio en Cali">
-            <img src="img/servicios/thumb/desinfeccion-gimnasio-cali.jpg" data-full="img/servicios/desinfeccion-gimnasio-cali.jpg" alt="Fumigación y desinfección de un gimnasio en Cali"
-                 width="514" height="700" loading="lazy" decoding="async" class="galeria__img" />
+            <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/desinfeccion-gimnasio-cali.avif 514w, img/servicios/desinfeccion-gimnasio-cali.avif 828w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><source type="image/webp" srcset="img/servicios/thumb/desinfeccion-gimnasio-cali.webp 514w, img/servicios/desinfeccion-gimnasio-cali.webp 828w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><img src="img/servicios/thumb/desinfeccion-gimnasio-cali.jpg" data-full="img/servicios/desinfeccion-gimnasio-cali.jpg" alt="Fumigación y desinfección de un gimnasio en Cali" width="514" height="700" class="galeria__img" loading="lazy" decoding="async" /></picture>
             <figcaption class="galeria__overlay">
               <span class="galeria__tag">Comercial</span>
               <span class="galeria__tipo">Gimnasio</span>
             </figcaption>
           </figure>
           <figure class="galeria__item" data-categoria="comunes" tabindex="0" role="button" aria-label="Ampliar: Nebulización de los pasillos de un conjunto residencial en Cali">
-            <img src="img/servicios/thumb/nebulizacion-zonas-comunes-cali.jpg" data-full="img/servicios/nebulizacion-zonas-comunes-cali.jpg" alt="Nebulización de los pasillos de un conjunto residencial en Cali"
-                 width="525" height="700" loading="lazy" decoding="async" class="galeria__img" />
+            <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/nebulizacion-zonas-comunes-cali.avif 525w, img/servicios/nebulizacion-zonas-comunes-cali.avif 1050w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><source type="image/webp" srcset="img/servicios/thumb/nebulizacion-zonas-comunes-cali.webp 525w, img/servicios/nebulizacion-zonas-comunes-cali.webp 1050w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><img src="img/servicios/thumb/nebulizacion-zonas-comunes-cali.jpg" data-full="img/servicios/nebulizacion-zonas-comunes-cali.jpg" alt="Nebulización de los pasillos de un conjunto residencial en Cali" width="525" height="700" class="galeria__img" loading="lazy" decoding="async" /></picture>
             <figcaption class="galeria__overlay">
               <span class="galeria__tag">Zonas comunes</span>
               <span class="galeria__tipo">Pasillos y corredores</span>
             </figcaption>
           </figure>
           <figure class="galeria__item" data-categoria="comercial" tabindex="0" role="button" aria-label="Ampliar: Fumigación de una bodega comercial con mercancía en Cali">
-            <img src="img/servicios/thumb/fumigacion-bodega-almacen-cali.jpg" data-full="img/servicios/fumigacion-bodega-almacen-cali.jpg" alt="Fumigación de una bodega comercial con mercancía en Cali"
-                 width="700" height="525" loading="lazy" decoding="async" class="galeria__img" />
+            <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/fumigacion-bodega-almacen-cali.avif 700w, img/servicios/fumigacion-bodega-almacen-cali.avif 1400w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><source type="image/webp" srcset="img/servicios/thumb/fumigacion-bodega-almacen-cali.webp 700w, img/servicios/fumigacion-bodega-almacen-cali.webp 1400w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><img src="img/servicios/thumb/fumigacion-bodega-almacen-cali.jpg" data-full="img/servicios/fumigacion-bodega-almacen-cali.jpg" alt="Fumigación de una bodega comercial con mercancía en Cali" width="700" height="525" class="galeria__img" loading="lazy" decoding="async" /></picture>
             <figcaption class="galeria__overlay">
               <span class="galeria__tag">Comercial</span>
               <span class="galeria__tipo">Bodega y almacén</span>
             </figcaption>
           </figure>
           <figure class="galeria__item" data-categoria="roedores" tabindex="0" role="button" aria-label="Ampliar: Control de roedores en el alcantarillado de un conjunto en Cali">
-            <img src="img/servicios/thumb/control-roedores-alcantarillado-cali.jpg" data-full="img/servicios/control-roedores-alcantarillado-cali.jpg" alt="Control de roedores en el alcantarillado de un conjunto en Cali"
-                 width="525" height="700" loading="lazy" decoding="async" class="galeria__img" />
+            <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/control-roedores-alcantarillado-cali.avif 525w, img/servicios/control-roedores-alcantarillado-cali.avif 1050w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><source type="image/webp" srcset="img/servicios/thumb/control-roedores-alcantarillado-cali.webp 525w, img/servicios/control-roedores-alcantarillado-cali.webp 1050w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><img src="img/servicios/thumb/control-roedores-alcantarillado-cali.jpg" data-full="img/servicios/control-roedores-alcantarillado-cali.jpg" alt="Control de roedores en el alcantarillado de un conjunto en Cali" width="525" height="700" class="galeria__img" loading="lazy" decoding="async" /></picture>
             <figcaption class="galeria__overlay">
               <span class="galeria__tag">Roedores</span>
               <span class="galeria__tipo">Alcantarillado</span>
             </figcaption>
           </figure>
           <figure class="galeria__item" data-categoria="comercial" tabindex="0" role="button" aria-label="Ampliar: Desinfección del aula de un jardín infantil en Cali">
-            <img src="img/servicios/thumb/desinfeccion-aula-jardin-infantil-cali.jpg" data-full="img/servicios/desinfeccion-aula-jardin-infantil-cali.jpg" alt="Desinfección del aula de un jardín infantil en Cali"
-                 width="700" height="525" loading="lazy" decoding="async" class="galeria__img" />
+            <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/desinfeccion-aula-jardin-infantil-cali.avif 700w, img/servicios/desinfeccion-aula-jardin-infantil-cali.avif 1400w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><source type="image/webp" srcset="img/servicios/thumb/desinfeccion-aula-jardin-infantil-cali.webp 700w, img/servicios/desinfeccion-aula-jardin-infantil-cali.webp 1400w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><img src="img/servicios/thumb/desinfeccion-aula-jardin-infantil-cali.jpg" data-full="img/servicios/desinfeccion-aula-jardin-infantil-cali.jpg" alt="Desinfección del aula de un jardín infantil en Cali" width="700" height="525" class="galeria__img" loading="lazy" decoding="async" /></picture>
             <figcaption class="galeria__overlay">
               <span class="galeria__tag">Comercial</span>
               <span class="galeria__tipo">Jardín infantil</span>
             </figcaption>
           </figure>
           <figure class="galeria__item" data-categoria="roedores" tabindex="0" role="button" aria-label="Ampliar: Dos técnicos aplicando control de roedores en una caja de registro en Cali">
-            <img src="img/servicios/thumb/control-roedores-caja-registro-cali.jpg" data-full="img/servicios/control-roedores-caja-registro-cali.jpg" alt="Dos técnicos aplicando control de roedores en una caja de registro en Cali"
-                 width="525" height="700" loading="lazy" decoding="async" class="galeria__img" />
+            <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/control-roedores-caja-registro-cali.avif 525w, img/servicios/control-roedores-caja-registro-cali.avif 1050w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><source type="image/webp" srcset="img/servicios/thumb/control-roedores-caja-registro-cali.webp 525w, img/servicios/control-roedores-caja-registro-cali.webp 1050w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><img src="img/servicios/thumb/control-roedores-caja-registro-cali.jpg" data-full="img/servicios/control-roedores-caja-registro-cali.jpg" alt="Dos técnicos aplicando control de roedores en una caja de registro en Cali" width="525" height="700" class="galeria__img" loading="lazy" decoding="async" /></picture>
             <figcaption class="galeria__overlay">
               <span class="galeria__tag">Roedores</span>
               <span class="galeria__tipo">Cajas de registro</span>
             </figcaption>
           </figure>
           <figure class="galeria__item" data-categoria="comercial" tabindex="0" role="button" aria-label="Ampliar: Nebulización del vestier y los lockers de una empresa en Cali">
-            <img src="img/servicios/thumb/nebulizacion-vestier-lockers-cali.jpg" data-full="img/servicios/nebulizacion-vestier-lockers-cali.jpg" alt="Nebulización del vestier y los lockers de una empresa en Cali"
-                 width="700" height="525" loading="lazy" decoding="async" class="galeria__img" />
+            <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/nebulizacion-vestier-lockers-cali.avif 700w, img/servicios/nebulizacion-vestier-lockers-cali.avif 1400w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><source type="image/webp" srcset="img/servicios/thumb/nebulizacion-vestier-lockers-cali.webp 700w, img/servicios/nebulizacion-vestier-lockers-cali.webp 1400w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><img src="img/servicios/thumb/nebulizacion-vestier-lockers-cali.jpg" data-full="img/servicios/nebulizacion-vestier-lockers-cali.jpg" alt="Nebulización del vestier y los lockers de una empresa en Cali" width="700" height="525" class="galeria__img" loading="lazy" decoding="async" /></picture>
             <figcaption class="galeria__overlay">
               <span class="galeria__tag">Comercial</span>
               <span class="galeria__tipo">Vestier y lockers</span>
             </figcaption>
           </figure>
           <figure class="galeria__item" data-categoria="comunes" tabindex="0" role="button" aria-label="Ampliar: Fumigación de zonas verdes y jardines de un conjunto en Cali">
-            <img src="img/servicios/thumb/fumigacion-zonas-verdes-cali.jpg" data-full="img/servicios/fumigacion-zonas-verdes-cali.jpg" alt="Fumigación de zonas verdes y jardines de un conjunto en Cali"
-                 width="394" height="700" loading="lazy" decoding="async" class="galeria__img" />
+            <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/fumigacion-zonas-verdes-cali.avif 394w, img/servicios/fumigacion-zonas-verdes-cali.avif 788w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><source type="image/webp" srcset="img/servicios/thumb/fumigacion-zonas-verdes-cali.webp 394w, img/servicios/fumigacion-zonas-verdes-cali.webp 788w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><img src="img/servicios/thumb/fumigacion-zonas-verdes-cali.jpg" data-full="img/servicios/fumigacion-zonas-verdes-cali.jpg" alt="Fumigación de zonas verdes y jardines de un conjunto en Cali" width="394" height="700" class="galeria__img" loading="lazy" decoding="async" /></picture>
             <figcaption class="galeria__overlay">
               <span class="galeria__tag">Zonas comunes</span>
               <span class="galeria__tipo">Zonas verdes</span>
             </figcaption>
           </figure>
           <figure class="galeria__item" data-categoria="comercial" tabindex="0" role="button" aria-label="Ampliar: Control de cucarachas en la cocina de una oficina en Cali">
-            <img src="img/servicios/thumb/control-cucarachas-cocina-oficina-cali.jpg" data-full="img/servicios/control-cucarachas-cocina-oficina-cali.jpg" alt="Control de cucarachas en la cocina de una oficina en Cali"
-                 width="700" height="525" loading="lazy" decoding="async" class="galeria__img" />
+            <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/control-cucarachas-cocina-oficina-cali.avif 700w, img/servicios/control-cucarachas-cocina-oficina-cali.avif 1400w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><source type="image/webp" srcset="img/servicios/thumb/control-cucarachas-cocina-oficina-cali.webp 700w, img/servicios/control-cucarachas-cocina-oficina-cali.webp 1400w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><img src="img/servicios/thumb/control-cucarachas-cocina-oficina-cali.jpg" data-full="img/servicios/control-cucarachas-cocina-oficina-cali.jpg" alt="Control de cucarachas en la cocina de una oficina en Cali" width="700" height="525" class="galeria__img" loading="lazy" decoding="async" /></picture>
             <figcaption class="galeria__overlay">
               <span class="galeria__tag">Comercial</span>
               <span class="galeria__tipo">Cocina de oficina</span>
             </figcaption>
           </figure>
           <div class="galeria__item galeria__item--video" data-categoria="comunes">
-            <video class="galeria__video" src="img/video/fumigacion-conjunto-residencial-cali.mp4" poster="img/video/fumigacion-conjunto-residencial-cali-poster.jpg"
+            <video class="galeria__video" src="img/video/fumigacion-conjunto-residencial-cali.mp4" poster="img/video/fumigacion-conjunto-residencial-cali-poster.webp"
                    width="562" height="1000" muted loop playsinline preload="none" aria-label="Video de fumigación en las fachadas de un conjunto residencial en Cali"></video>
             <span class="galeria__play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
             <div class="galeria__overlay galeria__overlay--fija">
@@ -796,88 +773,77 @@
             </div>
           </div>
           <figure class="galeria__item" data-categoria="roedores" tabindex="0" role="button" aria-label="Ampliar: Tratamiento de sumideros en el parqueadero de un edificio en Cali">
-            <img src="img/servicios/thumb/fumigacion-sumideros-parqueadero-cali.jpg" data-full="img/servicios/fumigacion-sumideros-parqueadero-cali.jpg" alt="Tratamiento de sumideros en el parqueadero de un edificio en Cali"
-                 width="525" height="700" loading="lazy" decoding="async" class="galeria__img" />
+            <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/fumigacion-sumideros-parqueadero-cali.avif 525w, img/servicios/fumigacion-sumideros-parqueadero-cali.avif 1050w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><source type="image/webp" srcset="img/servicios/thumb/fumigacion-sumideros-parqueadero-cali.webp 525w, img/servicios/fumigacion-sumideros-parqueadero-cali.webp 1050w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><img src="img/servicios/thumb/fumigacion-sumideros-parqueadero-cali.jpg" data-full="img/servicios/fumigacion-sumideros-parqueadero-cali.jpg" alt="Tratamiento de sumideros en el parqueadero de un edificio en Cali" width="525" height="700" class="galeria__img" loading="lazy" decoding="async" /></picture>
             <figcaption class="galeria__overlay">
               <span class="galeria__tag">Roedores</span>
               <span class="galeria__tipo">Sumideros</span>
             </figcaption>
           </figure>
           <figure class="galeria__item" data-categoria="comercial" tabindex="0" role="button" aria-label="Ampliar: Desinfección de baños institucionales en Cali">
-            <img src="img/servicios/thumb/desinfeccion-banos-institucionales-cali.jpg" data-full="img/servicios/desinfeccion-banos-institucionales-cali.jpg" alt="Desinfección de baños institucionales en Cali"
-                 width="700" height="525" loading="lazy" decoding="async" class="galeria__img" />
+            <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/desinfeccion-banos-institucionales-cali.avif 700w, img/servicios/desinfeccion-banos-institucionales-cali.avif 1400w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><source type="image/webp" srcset="img/servicios/thumb/desinfeccion-banos-institucionales-cali.webp 700w, img/servicios/desinfeccion-banos-institucionales-cali.webp 1400w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><img src="img/servicios/thumb/desinfeccion-banos-institucionales-cali.jpg" data-full="img/servicios/desinfeccion-banos-institucionales-cali.jpg" alt="Desinfección de baños institucionales en Cali" width="700" height="525" class="galeria__img" loading="lazy" decoding="async" /></picture>
             <figcaption class="galeria__overlay">
               <span class="galeria__tag">Comercial</span>
               <span class="galeria__tipo">Baños institucionales</span>
             </figcaption>
           </figure>
           <figure class="galeria__item" data-categoria="comunes" tabindex="0" role="button" aria-label="Ampliar: Nebulización del parqueadero subterráneo de un conjunto en Cali">
-            <img src="img/servicios/thumb/nebulizacion-parqueadero-conjunto-cali.jpg" data-full="img/servicios/nebulizacion-parqueadero-conjunto-cali.jpg" alt="Nebulización del parqueadero subterráneo de un conjunto en Cali"
-                 width="525" height="700" loading="lazy" decoding="async" class="galeria__img" />
+            <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/nebulizacion-parqueadero-conjunto-cali.avif 525w, img/servicios/nebulizacion-parqueadero-conjunto-cali.avif 1050w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><source type="image/webp" srcset="img/servicios/thumb/nebulizacion-parqueadero-conjunto-cali.webp 525w, img/servicios/nebulizacion-parqueadero-conjunto-cali.webp 1050w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><img src="img/servicios/thumb/nebulizacion-parqueadero-conjunto-cali.jpg" data-full="img/servicios/nebulizacion-parqueadero-conjunto-cali.jpg" alt="Nebulización del parqueadero subterráneo de un conjunto en Cali" width="525" height="700" class="galeria__img" loading="lazy" decoding="async" /></picture>
             <figcaption class="galeria__overlay">
               <span class="galeria__tag">Zonas comunes</span>
               <span class="galeria__tipo">Parqueadero</span>
             </figcaption>
           </figure>
           <figure class="galeria__item" data-categoria="comercial" tabindex="0" role="button" aria-label="Ampliar: Aplicación de gel contra cucarachas en el mobiliario de una cocina en Cali">
-            <img src="img/servicios/thumb/gel-cucarachas-mobiliario-cocina-cali.jpg" data-full="img/servicios/gel-cucarachas-mobiliario-cocina-cali.jpg" alt="Aplicación de gel contra cucarachas en el mobiliario de una cocina en Cali"
-                 width="700" height="525" loading="lazy" decoding="async" class="galeria__img" />
+            <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/gel-cucarachas-mobiliario-cocina-cali.avif 700w, img/servicios/gel-cucarachas-mobiliario-cocina-cali.avif 1400w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><source type="image/webp" srcset="img/servicios/thumb/gel-cucarachas-mobiliario-cocina-cali.webp 700w, img/servicios/gel-cucarachas-mobiliario-cocina-cali.webp 1400w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><img src="img/servicios/thumb/gel-cucarachas-mobiliario-cocina-cali.jpg" data-full="img/servicios/gel-cucarachas-mobiliario-cocina-cali.jpg" alt="Aplicación de gel contra cucarachas en el mobiliario de una cocina en Cali" width="700" height="525" class="galeria__img" loading="lazy" decoding="async" /></picture>
             <figcaption class="galeria__overlay">
               <span class="galeria__tag">Comercial</span>
               <span class="galeria__tipo">Gel en mobiliario</span>
             </figcaption>
           </figure>
           <figure class="galeria__item" data-categoria="roedores" tabindex="0" role="button" aria-label="Ampliar: Instalación de cebos para roedores en exteriores en Cali">
-            <img src="img/servicios/thumb/cebado-roedores-exteriores-cali.jpg" data-full="img/servicios/cebado-roedores-exteriores-cali.jpg" alt="Instalación de cebos para roedores en exteriores en Cali"
-                 width="525" height="700" loading="lazy" decoding="async" class="galeria__img" />
+            <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/cebado-roedores-exteriores-cali.avif 525w, img/servicios/cebado-roedores-exteriores-cali.avif 1050w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><source type="image/webp" srcset="img/servicios/thumb/cebado-roedores-exteriores-cali.webp 525w, img/servicios/cebado-roedores-exteriores-cali.webp 1050w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><img src="img/servicios/thumb/cebado-roedores-exteriores-cali.jpg" data-full="img/servicios/cebado-roedores-exteriores-cali.jpg" alt="Instalación de cebos para roedores en exteriores en Cali" width="525" height="700" class="galeria__img" loading="lazy" decoding="async" /></picture>
             <figcaption class="galeria__overlay">
               <span class="galeria__tag">Roedores</span>
               <span class="galeria__tipo">Cebado en exteriores</span>
             </figcaption>
           </figure>
           <figure class="galeria__item" data-categoria="comercial" tabindex="0" role="button" aria-label="Ampliar: Aspersión de insecticida en pasillos de oficinas en Cali">
-            <img src="img/servicios/thumb/aspersion-oficinas-cali.jpg" data-full="img/servicios/aspersion-oficinas-cali.jpg" alt="Aspersión de insecticida en pasillos de oficinas en Cali"
-                 width="700" height="525" loading="lazy" decoding="async" class="galeria__img" />
+            <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/aspersion-oficinas-cali.avif 700w, img/servicios/aspersion-oficinas-cali.avif 1400w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><source type="image/webp" srcset="img/servicios/thumb/aspersion-oficinas-cali.webp 700w, img/servicios/aspersion-oficinas-cali.webp 1400w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><img src="img/servicios/thumb/aspersion-oficinas-cali.jpg" data-full="img/servicios/aspersion-oficinas-cali.jpg" alt="Aspersión de insecticida en pasillos de oficinas en Cali" width="700" height="525" class="galeria__img" loading="lazy" decoding="async" /></picture>
             <figcaption class="galeria__overlay">
               <span class="galeria__tag">Comercial</span>
               <span class="galeria__tipo">Oficinas</span>
             </figcaption>
           </figure>
           <figure class="galeria__item" data-categoria="comunes" tabindex="0" role="button" aria-label="Ampliar: Tratamiento perimetral en la zona exterior de una edificación en Cali">
-            <img src="img/servicios/thumb/control-perimetral-exteriores-cali.jpg" data-full="img/servicios/control-perimetral-exteriores-cali.jpg" alt="Tratamiento perimetral en la zona exterior de una edificación en Cali"
-                 width="525" height="700" loading="lazy" decoding="async" class="galeria__img" />
+            <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/control-perimetral-exteriores-cali.avif 525w, img/servicios/control-perimetral-exteriores-cali.avif 1050w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><source type="image/webp" srcset="img/servicios/thumb/control-perimetral-exteriores-cali.webp 525w, img/servicios/control-perimetral-exteriores-cali.webp 1050w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><img src="img/servicios/thumb/control-perimetral-exteriores-cali.jpg" data-full="img/servicios/control-perimetral-exteriores-cali.jpg" alt="Tratamiento perimetral en la zona exterior de una edificación en Cali" width="525" height="700" class="galeria__img" loading="lazy" decoding="async" /></picture>
             <figcaption class="galeria__overlay">
               <span class="galeria__tag">Zonas comunes</span>
               <span class="galeria__tipo">Control perimetral</span>
             </figcaption>
           </figure>
           <figure class="galeria__item" data-categoria="comercial" tabindex="0" role="button" aria-label="Ampliar: Nebulización de la zona de carga de una bodega en Cali">
-            <img src="img/servicios/thumb/nebulizacion-bodega-zona-carga-cali.jpg" data-full="img/servicios/nebulizacion-bodega-zona-carga-cali.jpg" alt="Nebulización de la zona de carga de una bodega en Cali"
-                 width="700" height="525" loading="lazy" decoding="async" class="galeria__img" />
+            <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/nebulizacion-bodega-zona-carga-cali.avif 700w, img/servicios/nebulizacion-bodega-zona-carga-cali.avif 1400w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><source type="image/webp" srcset="img/servicios/thumb/nebulizacion-bodega-zona-carga-cali.webp 700w, img/servicios/nebulizacion-bodega-zona-carga-cali.webp 1400w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><img src="img/servicios/thumb/nebulizacion-bodega-zona-carga-cali.jpg" data-full="img/servicios/nebulizacion-bodega-zona-carga-cali.jpg" alt="Nebulización de la zona de carga de una bodega en Cali" width="700" height="525" class="galeria__img" loading="lazy" decoding="async" /></picture>
             <figcaption class="galeria__overlay">
               <span class="galeria__tag">Comercial</span>
               <span class="galeria__tipo">Zona de carga</span>
             </figcaption>
           </figure>
           <figure class="galeria__item" data-categoria="comercial" tabindex="0" role="button" aria-label="Ampliar: Fumigación del archivo y los casilleros de una empresa en Cali">
-            <img src="img/servicios/thumb/fumigacion-archivo-casilleros-cali.jpg" data-full="img/servicios/fumigacion-archivo-casilleros-cali.jpg" alt="Fumigación del archivo y los casilleros de una empresa en Cali"
-                 width="525" height="700" loading="lazy" decoding="async" class="galeria__img" />
+            <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/fumigacion-archivo-casilleros-cali.avif 525w, img/servicios/fumigacion-archivo-casilleros-cali.avif 1050w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><source type="image/webp" srcset="img/servicios/thumb/fumigacion-archivo-casilleros-cali.webp 525w, img/servicios/fumigacion-archivo-casilleros-cali.webp 1050w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><img src="img/servicios/thumb/fumigacion-archivo-casilleros-cali.jpg" data-full="img/servicios/fumigacion-archivo-casilleros-cali.jpg" alt="Fumigación del archivo y los casilleros de una empresa en Cali" width="525" height="700" class="galeria__img" loading="lazy" decoding="async" /></picture>
             <figcaption class="galeria__overlay">
               <span class="galeria__tag">Comercial</span>
               <span class="galeria__tipo">Archivo y casilleros</span>
             </figcaption>
           </figure>
           <figure class="galeria__item" data-categoria="comunes" tabindex="0" role="button" aria-label="Ampliar: Tratamiento de jardineras contra hormigas y rastreros en Cali">
-            <img src="img/servicios/thumb/tratamiento-jardineras-cali.jpg" data-full="img/servicios/tratamiento-jardineras-cali.jpg" alt="Tratamiento de jardineras contra hormigas y rastreros en Cali"
-                 width="525" height="700" loading="lazy" decoding="async" class="galeria__img" />
+            <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/tratamiento-jardineras-cali.avif 525w, img/servicios/tratamiento-jardineras-cali.avif 1050w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><source type="image/webp" srcset="img/servicios/thumb/tratamiento-jardineras-cali.webp 525w, img/servicios/tratamiento-jardineras-cali.webp 1050w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><img src="img/servicios/thumb/tratamiento-jardineras-cali.jpg" data-full="img/servicios/tratamiento-jardineras-cali.jpg" alt="Tratamiento de jardineras contra hormigas y rastreros en Cali" width="525" height="700" class="galeria__img" loading="lazy" decoding="async" /></picture>
             <figcaption class="galeria__overlay">
               <span class="galeria__tag">Zonas comunes</span>
               <span class="galeria__tipo">Jardineras</span>
             </figcaption>
           </figure>
           <figure class="galeria__item" data-categoria="extintores" tabindex="0" role="button" aria-label="Ampliar: Extintores recargados y señalizados listos para entrega en Cali">
-            <img src="img/servicios/thumb/extintores-mantenimiento-cali.jpg" data-full="img/servicios/extintores-mantenimiento-cali.jpg" alt="Extintores recargados y señalizados listos para entrega en Cali"
-                 width="700" height="394" loading="lazy" decoding="async" class="galeria__img" />
+            <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/extintores-mantenimiento-cali.avif 700w, img/servicios/extintores-mantenimiento-cali.avif 1400w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><source type="image/webp" srcset="img/servicios/thumb/extintores-mantenimiento-cali.webp 700w, img/servicios/extintores-mantenimiento-cali.webp 1400w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"><img src="img/servicios/thumb/extintores-mantenimiento-cali.jpg" data-full="img/servicios/extintores-mantenimiento-cali.jpg" alt="Extintores recargados y señalizados listos para entrega en Cali" width="700" height="394" class="galeria__img" loading="lazy" decoding="async" /></picture>
             <figcaption class="galeria__overlay">
               <span class="galeria__tag">Extintores</span>
               <span class="galeria__tipo">Recarga y señalización</span>
@@ -895,7 +861,7 @@
       <button class="lightbox__nav lightbox__nav--prev" aria-label="Anterior">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 4 7 12 15 20"/></svg>
       </button>
-      <img class="lightbox__img" id="lightbox-img" src="" alt="" />
+      <img class="lightbox__img" id="lightbox-img" src="" alt="" /> loading="lazy" decoding="async" />
       <button class="lightbox__nav lightbox__nav--next" aria-label="Siguiente">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 4 17 12 9 20"/></svg>
       </button>
@@ -1041,9 +1007,9 @@
     </a>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" defer></script>
-  <script src="js/particles.js?v=4" defer></script>
-  <script src="js/animations.js?v=4" defer></script>
-  <script src="js/script.js?v=4" defer></script>
+  <script src="js/anime-loader.js?v=5" defer></script>
+  <script src="js/particles.js?v=5" defer></script>
+  <script src="js/animations.js?v=5" defer></script>
+  <script src="js/script.js?v=5" defer></script>
 </body>
 </html>

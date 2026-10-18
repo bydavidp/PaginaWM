@@ -280,25 +280,21 @@
     });
   }
 
-  /* ───────── 4c2. HERO TYPING — EFECTO TYPEWRITER ───────── */
-  function heroTyping() {
-    const el = document.getElementById('hero-typing');
+  /* ───────── 4c2. ROTACIÓN DEL TIPO DE PLAGA EN EL HERO ───────── */
+  function heroPestRotation() {
+    const el = document.querySelector('[data-rotating-pest]');
     if (!el) return;
-    const text = el.getAttribute('data-text') || '';
-    if (!text) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const pests = ['cucarachas', 'roedores', 'mosquitos', 'hormigas'];
     let index = 0;
-    el.textContent = '';
-    el.style.opacity = '1';
-    el.style.visibility = 'visible';
-    function type() {
-      if (index < text.length) {
-        el.textContent += text.charAt(index);
-        index++;
-        const delay = text.charAt(index - 1) === '.' || text.charAt(index - 1) === ',' ? 80 : 30 + Math.random() * 20;
-        setTimeout(type, delay);
-      }
-    }
-    setTimeout(type, 1500);
+    window.setInterval(() => {
+      el.classList.add('is-changing');
+      window.setTimeout(() => {
+        index = (index + 1) % pests.length;
+        el.textContent = pests[index];
+        el.classList.remove('is-changing');
+      }, 180);
+    }, 2800);
   }
 
   /* ───────── 4d. BENEFITS IMAGE — REVELACIÓN CON ZOOM + FLOTACIÓN ───────── */
@@ -867,7 +863,10 @@
     btn.innerHTML = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="4 13 10 7 16 13"/></svg>';
     document.body.appendChild(btn);
 
-    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    btn.addEventListener('click', () => {
+      const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+      window.scrollTo({ top: 0, behavior });
+    });
 
     let ticking = false;
     function check() {
@@ -1109,13 +1108,15 @@
           <a href="${detalleHref}" class="btn btn--secondary-dark modal__cta" style="margin-top:.625rem;">Ver detalles del servicio</a>
         `;
         overlay.classList.add('active');
-        anime({
-          targets: '.modal__icon',
-          scale: [0, 1],
-          rotate: [180, 0],
-          duration: 500,
-          easing: 'easeOutBack',
-        });
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && typeof anime === 'function') {
+          anime({
+            targets: '.modal__icon',
+            scale: [0, 1],
+            rotate: [180, 0],
+            duration: 500,
+            easing: 'easeOutBack',
+          });
+        }
       });
     });
   }
@@ -1148,7 +1149,14 @@
       <button class="cookie-consent__btn">Aceptar</button>
     `;
     document.body.appendChild(banner);
-    setTimeout(() => banner.classList.add('show'), 500);
+    const events = ['pointerdown', 'keydown', 'scroll'];
+    const showAfterInteraction = () => {
+      events.forEach((eventName) => window.removeEventListener(eventName, showAfterInteraction));
+      setTimeout(() => banner.classList.add('show'), 1500);
+    };
+    events.forEach((eventName) => {
+      window.addEventListener(eventName, showAfterInteraction, { once: true, passive: true });
+    });
     banner.querySelector('.cookie-consent__btn').addEventListener('click', () => {
       localStorage.setItem('cookiesAccepted', 'true');
       banner.style.transform = 'translateY(100%)';
@@ -1197,6 +1205,22 @@
   /* ───────── INIT ───────── */
 
   function initAnimations() {
+    heroPestRotation();
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || typeof anime === 'undefined') {
+      document.querySelectorAll('.animate, .animate--left, .animate--right, .animate--scale, .animate--up')
+        .forEach((el) => el.classList.add('visible'));
+      document.querySelectorAll('[data-counter]').forEach((el) => {
+        el.textContent = `${el.dataset.target || '0'}${el.getAttribute('data-suffix') || ''}`;
+      });
+      scrollProgress();
+      backToTop();
+      navColorOnScroll();
+      serviceModal();
+      faqAccordion();
+      cookieConsent();
+      return;
+    }
+
     /* específicas */
     logoPulse();
     heroFumigationFog();
@@ -1205,7 +1229,6 @@
     heroVisualReveal();
     heroImageFloat();
     heroImageHover();
-    heroTyping();
     benefitsImageReveal();
     benefitsImageHover();
     teamImageReveal();

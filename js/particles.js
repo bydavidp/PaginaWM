@@ -137,9 +137,20 @@
     new ParticleSystem('hero-canvas');
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', boot);
-  } else {
-    boot();
+  function scheduleBoot() {
+    const start = () => {
+      if ('requestIdleCallback' in window) {
+        window.requestIdleCallback(boot, { timeout: 1800 });
+      } else {
+        window.setTimeout(boot, 400);
+      }
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', start, { once: true });
+    } else {
+      start();
+    }
   }
+
+  scheduleBoot();
 })();

@@ -21,7 +21,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=4">
+  <link rel="preload" as="style" href="css/style.css?v=5">
+  <link rel="stylesheet" href="css/style.css?v=5">
   <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png">
@@ -218,7 +219,7 @@
         <div class="service-detail animate">
           <div class="service-detail__visual">
             <figure class="service-photo">
-              <img src="img/servicios/extintores-mantenimiento-cali.jpg" alt="Extintores recargados y señalizados listos para entrega en Cali" loading="eager" decoding="async" />
+              <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/extintores-mantenimiento-cali.avif 700w, img/servicios/extintores-mantenimiento-cali.avif 1400w" sizes="(max-width: 800px) 100vw, 50vw"><source type="image/webp" srcset="img/servicios/thumb/extintores-mantenimiento-cali.webp 700w, img/servicios/extintores-mantenimiento-cali.webp 1400w" sizes="(max-width: 800px) 100vw, 50vw"><img src="img/servicios/extintores-mantenimiento-cali.jpg" alt="Extintores recargados y señalizados listos para entrega en Cali" loading="lazy" decoding="async" /></picture>
               <figcaption class="service-photo__caption">Recarga y mantenimiento de extintores, Cali</figcaption>
             </figure>
           </div>
@@ -295,7 +296,7 @@
         </div>
         <div class="gallery-strip animate" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.25rem;">
           <figure class="service-photo">
-            <img src="img/servicios/extintores-mantenimiento-cali.jpg" alt="Extintores recargados listos para entrega en Cali" loading="lazy" decoding="async" />
+            <picture class="responsive-image"><source type="image/avif" srcset="img/servicios/thumb/extintores-mantenimiento-cali.avif 700w, img/servicios/extintores-mantenimiento-cali.avif 1400w" sizes="(max-width: 800px) 100vw, 50vw"><source type="image/webp" srcset="img/servicios/thumb/extintores-mantenimiento-cali.webp 700w, img/servicios/extintores-mantenimiento-cali.webp 1400w" sizes="(max-width: 800px) 100vw, 50vw"><img src="img/servicios/extintores-mantenimiento-cali.jpg" alt="Extintores recargados listos para entrega en Cali" loading="lazy" decoding="async" /></picture>
             <figcaption class="service-photo__caption">Extintores listos para entrega</figcaption>
           </figure>
         </div>
@@ -508,8 +509,8 @@
     </a>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" defer></script>
-  <script src="js/animations.js?v=4" defer></script>
-  <script src="js/script.js?v=4" defer></script>
+  <script src="js/anime-loader.js?v=5" defer></script>
+  <script src="js/animations.js?v=5" defer></script>
+  <script src="js/script.js?v=5" defer></script>
 </body>
 </html>

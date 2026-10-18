@@ -292,7 +292,8 @@ function initSmoothScroll() {
     const target = document.querySelector(targetId);
     if (target) {
       e.preventDefault();
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+      target.scrollIntoView({ behavior, block: 'start' });
     }
   });
 }
@@ -456,7 +457,11 @@ function initGaleria() {
   function pintar(item) {
     const img = item.querySelector('.galeria__img');
     if (!img) return;
-    lightboxImg.src = img.dataset.full || img.src;
+    const fullImage = img.dataset.full || img.src;
+    const selectedFormat = (img.currentSrc || img.src).match(/\.(avif|webp)(?:$|\?)/i);
+    lightboxImg.src = selectedFormat
+      ? fullImage.replace(/\.(?:jpe?g|png)(?=$|\?)/i, `.${selectedFormat[1]}`)
+      : fullImage;
     lightboxImg.alt = img.alt;
     if (lightboxCaption) lightboxCaption.textContent = img.alt;
   }
@@ -521,7 +526,27 @@ function init() {
   initGaleria();
 
   if (typeof initAnimations === 'function') {
-    initAnimations();
+    const revealContent = () => {
+      document.querySelectorAll('.animate, .animate--left, .animate--right, .animate--scale, .animate--up')
+        .forEach((el) => el.classList.add('visible'));
+    };
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion || typeof anime === 'function' || window.animeLoadState === 'failed') {
+      initAnimations();
+    } else {
+      let initialized = false;
+      const initialize = () => {
+        if (initialized) return;
+        initialized = true;
+        window.removeEventListener('animejsready', initialize);
+        window.removeEventListener('animejsfailed', initialize);
+        initAnimations();
+      };
+      revealContent();
+      window.addEventListener('animejsready', initialize, { once: true });
+      window.addEventListener('animejsfailed', initialize, { once: true });
+      window.setTimeout(initialize, 4000);
+    }
   }
 
   /* ocultar loader después de inicializar todo */
@@ -531,7 +556,7 @@ function init() {
       loader.classList.add('hidden');
       setTimeout(() => loader.remove(), 600);
     }
-  }, 1200);
+  }, 650);
 }
 
 document.addEventListener('DOMContentLoaded', init);

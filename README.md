@@ -42,12 +42,13 @@ PaginaWM/
 ├── js/
 │   ├── animations.js                   # Motor de animaciones (Anime.js + IntersectionObserver)
 │   ├── particles.js                    # Niebla de fumigación y partículas del hero
+│   ├── anime-loader.js                 # Carga Anime.js durante tiempo ocioso
 │   └── script.js                       # Menú, testimonios, formulario, cotizador, galería
 │
 ├── tools/
 │   └── generar-servicios.js           # Generador de las 7 páginas de servicio
 │
-├── img/                                # Fotos reales (1400px + thumbs 700px), videos, favicons
+├── img/                                # Fotos reales, variantes AVIF/WebP, videos y favicons
 ├── favicon.ico                         # Favicon multi-tamaño con el logo
 ├── sitemap.xml                         # Las 11 URLs del sitio
 ├── robots.txt                          # Apunta al sitemap
@@ -83,7 +84,7 @@ python -m http.server 8000
 | Estructura | HTML5 semántico + Open Graph + schema.org JSON-LD |
 | Estilos | CSS3 con variables, clamp() y mobile-first |
 | Interactividad | JavaScript vanilla sin frameworks |
-| Animaciones | Anime.js 3.2.1 sobre CDN |
+| Animaciones | Anime.js 3.2.1 bajo demanda en tiempo ocioso |
 | Tipografía | Google Fonts · Inter |
 | Formulario | Formspree con validación client-side |
 | Mapas | Google Maps Embed (iframe) |
@@ -118,7 +119,7 @@ Los tokens viven en `:root` dentro de `css/style.css`.
   `FAQPage` y `BreadcrumbList` en cada página
 - `sitemap.xml` + `robots.txt`, canonical por página, meta geo (CO-VAC)
 - Open Graph + Twitter Cards con imagen 1200×630 para WhatsApp y redes
-- Alt descriptivos en las 35 imágenes reales (SEO de imágenes)
+- Alt descriptivos y variantes AVIF/WebP con JPEG de respaldo, `srcset` y carga diferida
 
 ### Conversión
 
@@ -130,11 +131,19 @@ Los tokens viven en `:root` dentro de `css/style.css`.
 - Formulario de contacto con validación en tiempo real (Formspree)
 - Fotos reales del equipo y de servicios realizados en toda la página
 
+Las fotos de contenido se sirven desde `<picture>` con AVIF, WebP y JPEG de respaldo.
+Las galerías usan las miniaturas y originales en `srcset`; solo la imagen principal del
+hero se carga de forma eager. Al agregar fotos, conserva los JPEG existentes y crea
+sus variantes `.avif` y `.webp` junto a cada original y miniatura para mantener la
+mejora en formatos compatibles. Anime.js y las partículas se difieren a tiempo ocioso;
+con `prefers-reduced-motion`, el sitio omite sus animaciones y muestra los contadores
+sin movimiento.
+
 ### Animaciones
 
 | Animación | Tecnología |
 |-----------|-----------|
-| Niebla de fumigación en hero | Canvas 2D |
+| Niebla de fumigación en hero | Canvas 2D (inicio en tiempo ocioso) |
 | Ondas de pulso expansivas | DOM dinámico + Anime.js timeline |
 | Parallax 3D en hover | Perspectiva + mousemove |
 | Orbes flotantes con glow | keyframes + backdrop-filter |

@@ -5,6 +5,9 @@ HTML estático, así que no hace falta build ni servidor.
 
 URL final: **https://bydavidp.github.io/PaginaWM/**
 
+GitHub Pages no procesa `_headers` de Netlify; los CSS y JS usan parámetros de versión
+en sus URL para renovar la caché cuando cambian.
+
 ---
 
 ## 1. Ver el sitio antes de publicar
@@ -94,7 +97,7 @@ URL de github.io. Cuando lo tengas:
 
 ## Pendientes de contenido
 
-- **Fotos reales en la galería.** Ya integradas en `img/servicios/` (23 fotos + 2 videos en `img/video/`). Para agregar más: exportar a `img/servicios/NOMBRE.jpg` (max 1400px) y su miniatura a `img/servicios/thumb/NOMBRE.jpg` (max 700px), y sumar el `<figure class="galeria__item">` correspondiente en `index.html`.
+- **Fotos reales en la galería.** Ya integradas en `img/servicios/` (23 fotos + 2 videos en `img/video/`). Para agregar más: exportar a `img/servicios/NOMBRE.jpg` (max 1400px) y su miniatura a `img/servicios/thumb/NOMBRE.jpg` (max 700px), crear las variantes `.avif` y `.webp` de ambas, y sumar el `<figure class="galeria__item">` correspondiente en `index.html`.
   Seis fotos de trabajos reales (antes/después funcionan muy bien) convierten
   bastante más que ilustraciones genéricas.
 - **Precios del cotizador.** Están en `index.html`, en los `data-precio` del

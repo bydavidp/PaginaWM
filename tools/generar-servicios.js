@@ -169,9 +169,9 @@ const FOOTER = `  <!-- ═══ FOOTER ═══ -->
     </a>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" defer></script>
-  <script src="js/animations.js?v=4" defer></script>
-  <script src="js/script.js?v=4" defer></script>`;
+  <script src="js/anime-loader.js?v=5" defer></script>
+  <script src="js/animations.js?v=5" defer></script>
+  <script src="js/script.js?v=5" defer></script>`;
 
 const TRUSTBAR = `    <!-- ═══ TRUST BAR ═══ -->
     <section class="trustbar" aria-label="Por qué confiar en nosotros">
@@ -284,9 +284,26 @@ function tableRow(feat, detail) {
               </tr>`;
 }
 
+function responsivePicture(src, alt, loading) {
+  const thumb = src.replace('/servicios/', '/servicios/thumb/');
+  const avif = (url) => url.replace(/\.(jpe?g|png)$/i, '.avif');
+  const webp = (url) => url.replace(/\.(jpe?g|png)$/i, '.webp');
+  const thumbAvailable = fs.existsSync(path.join(DIR, thumb));
+  const priority = loading === 'eager' ? ' fetchpriority="high"' : '';
+  const candidates = (format) => thumbAvailable
+    ? `${format(thumb)} 1x, ${format(src)} 2x`
+    : format(src);
+
+  return `<picture class="responsive-image">
+                <source type="image/avif" srcset="${candidates(avif)}">
+                <source type="image/webp" srcset="${candidates(webp)}">
+                <img src="${src}" alt="${alt}" loading="${loading}" decoding="async"${priority} />
+              </picture>`;
+}
+
 function galleryBlock(service) {
   const imgs = service.gallery.map((g) => `          <figure class="service-photo">
-            <img src="${g.src}" alt="${g.alt}" loading="lazy" decoding="async" />
+            ${responsivePicture(g.src, g.alt, 'lazy')}
             <figcaption class="service-photo__caption">${g.caption}</figcaption>
           </figure>`).join('\n');
   return `    <!-- ═══ TRABAJO REAL ═══ -->
@@ -395,7 +412,8 @@ function renderPage(service) {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=4">
+  <link rel="preload" as="style" href="css/style.css?v=5">
+  <link rel="stylesheet" href="css/style.css?v=5">
   <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png">
@@ -433,7 +451,7 @@ ${TRUSTBAR}
         <div class="service-detail animate">
           <div class="service-detail__visual">
             <figure class="service-photo">
-              <img src="${service.image}" alt="${service.imageAlt}" loading="eager" decoding="async" />
+              ${responsivePicture(service.image, service.imageAlt, 'eager')}
               <figcaption class="service-photo__caption">${service.imageCaption}</figcaption>
             </figure>
           </div>
