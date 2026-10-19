@@ -84,8 +84,8 @@ python -m http.server 8000
 | Estructura | HTML5 semántico + Open Graph + schema.org JSON-LD |
 | Estilos | CSS3 con variables, clamp() y mobile-first |
 | Interactividad | JavaScript vanilla sin frameworks |
-| Animaciones | Anime.js 3.2.1 bajo demanda en tiempo ocioso |
-| Tipografía | Google Fonts · Inter |
+| Animaciones | Anime.js 3.2.1 autoalojado, bajo demanda en tiempo ocioso |
+| Tipografía | Inter variable autoalojada (woff2) |
 | Formulario | Formspree con validación client-side |
 | Mapas | Google Maps Embed (iframe) |
 | Hosting | GitHub Pages |
@@ -161,7 +161,7 @@ sin movimiento.
 - **Menú móvil premium** fullscreen con entrada escalonada
 - **Barra de progreso** fija de lectura
 - **Botón volver arriba** con entrada animada
-- **WhatsApp flotante** con pulso suave
+- **WhatsApp flotante** con pulso y mensaje contextual seg?n la secci?n; barra m?vil fija con Llamar y WhatsApp
 - **Loader** de entrada con logo animado
 - **Cookie consent** con localStorage
 - **FAQ accordion** toggle único
@@ -177,7 +177,7 @@ sin movimiento.
 |-------|-------|
 | Colores y tokens | Variables `:root` en `css/style.css` |
 | Números de WhatsApp y teléfono | Enlaces `wa.me/…` y `tel:…` en los HTML (todos los archivos) |
-| Precios del cotizador | `PRECIOS_BASE` en `js/script.js` |
+| Precios del cotizador | `data-precio` de los radios en `index.html`; extras en `js/script.js` |
 | Textos de las páginas de servicio | `tools/generar-servicios.js` (y regenerar con `node tools/generar-servicios.js`) |
 | Acción del formulario | Atributo `action=""` en `contact.html` |
 | Textos del hero | Sección `.hero` en `index.html` |

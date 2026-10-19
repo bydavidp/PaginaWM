@@ -77,6 +77,11 @@
     if (!hero) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
+    /* En móvil ya existe la niebla persistente de particles.js.
+       Esta segunda nube dibuja cientos de partículas justo cuando el
+       teléfono está pintando el hero, así que se omite para cuidar TBT. */
+    if (window.matchMedia('(max-width: 767px)').matches) return;
+
     const canvas = document.createElement('canvas');
     canvas.className = 'hero__particles';
     canvas.setAttribute('aria-hidden', 'true');
@@ -816,23 +821,26 @@
       const ring = document.createElement('div');
       ring.className = 'pulse-ring';
       ring.style.borderColor = color;
+
+      /* Tamaño fijo + scale: animar width/height obligaba al navegador a
+         recalcular el layout en cada frame y generaba CLS. */
+      const maxSize = Math.max(hero.offsetWidth, hero.offsetHeight) * 1.8;
+      ring.style.width = maxSize + 'px';
+      ring.style.height = maxSize + 'px';
+      ring.style.left = '50%';
+      ring.style.top = '50%';
+      ring.style.marginLeft = -(maxSize / 2) + 'px';
+      ring.style.marginTop = -(maxSize / 2) + 'px';
       hero.appendChild(ring);
 
-      const maxSize = Math.max(hero.offsetWidth, hero.offsetHeight) * 1.8;
       anime({
         targets: ring,
-        width: [0, maxSize],
-        height: [0, maxSize],
+        scale: [0, 1],
         opacity: [0.8, 0],
         duration: 5000,
         delay: i * 1600,
         loop: true,
         easing: 'easeOutCubic',
-        update: (anim) => {
-          const s = anim.animations[0].currentValue;
-          ring.style.left = `calc(50% - ${s / 2}px)`;
-          ring.style.top = `calc(50% - ${s / 2}px)`;
-        },
       });
     });
   }
@@ -884,36 +892,45 @@
 
   /* ───────── D. SVGs QUE SE DIBUJAN SOLOS ───────── */
   function svgDraw() {
-    document.querySelectorAll('.service-detail__visual svg').forEach(svg => {
-      const paths = svg.querySelectorAll('[stroke]:not([stroke="none"])');
-      const valid = Array.from(paths).filter(p => p.getTotalLength && p.getTotalLength() > 0);
-      if (!valid.length) return;
+    /* El dibujo de iconos obliga a calcular longitudes de trazo (layout).
+       En móvil el efecto casi no se percibe y cuesta CPU, así que se omite. */
+    if (window.matchMedia('(max-width: 767px)').matches) return;
 
-      valid.forEach(p => {
-        const len = p.getTotalLength();
-        p.style.strokeDasharray = len;
-        p.style.strokeDashoffset = len;
-        p.dataset.len = len;
-      });
+    const iconos = document.querySelectorAll(
+      '.service-detail__visual svg, .service-card__icon svg, ' +
+      '.benefit-item__icon svg, .trustbar__item svg'
+    );
 
+    iconos.forEach(svg => {
       const obs = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const targets = entry.target.querySelectorAll('[stroke]:not([stroke="none"])');
-            const validTargets = Array.from(targets).filter(t => parseFloat(t.dataset.len) > 0);
-            if (validTargets.length) {
-              anime({
-                targets: validTargets,
-                strokeDashoffset: [el => el.dataset.len, 0],
-                duration: 2500,
-                delay: anime.stagger(30),
-                easing: 'easeOutQuad',
-              });
-            }
-            obs.unobserve(entry.target);
+          if (!entry.isIntersecting) return;
+
+          /* Las longitudes se calculan solo cuando el icono entra en pantalla. */
+          const paths = Array.from(entry.target.querySelectorAll('[stroke]:not([stroke="none"])'))
+            .filter(p => p.getTotalLength && p.getTotalLength() > 0);
+
+          if (paths.length) {
+            paths.forEach(p => {
+              const len = p.getTotalLength();
+              p.dataset.len = len;
+              p.style.strokeDasharray = len;
+              p.style.strokeDashoffset = len;
+            });
+
+            anime({
+              targets: paths,
+              strokeDashoffset: [el => parseFloat(el.dataset.len), 0],
+              duration: 2500,
+              delay: anime.stagger(30),
+              easing: 'easeOutQuad',
+            });
           }
+
+          obs.unobserve(entry.target);
         });
       }, { threshold: 0.3 });
+
       obs.observe(svg);
     });
   }
@@ -1144,9 +1161,11 @@
     if (localStorage.getItem('cookiesAccepted')) return;
     const banner = document.createElement('div');
     banner.className = 'cookie-consent';
+    banner.setAttribute('role', 'region');
+    banner.setAttribute('aria-label', 'Aviso de cookies');
     banner.innerHTML = `
-      <p>Usamos cookies para mejorar tu experiencia. Al continuar navegando aceptas nuestra <a href="#">política de privacidad</a>.</p>
-      <button class="cookie-consent__btn">Aceptar</button>
+      <p>Usamos cookies para mejorar tu experiencia. Al continuar navegando aceptas su uso.</p>
+      <button class="cookie-consent__btn" type="button">Aceptar</button>
     `;
     document.body.appendChild(banner);
     const events = ['pointerdown', 'keydown', 'scroll'];
@@ -1187,11 +1206,12 @@
 
   /* ───────── L. MAGNETIC BUTTONS ───────── */
   function magneticButtons() {
+    if (window.matchMedia('(pointer: coarse)').matches) return;
     els('.btn, .nav__cta, .whatsapp-float, .back-to-top').forEach(btn => {
       btn.addEventListener('mousemove', (e) => {
         const rect = btn.getBoundingClientRect();
-        const x = (e.clientX - rect.left - rect.width / 2) * 0.3;
-        const y = (e.clientY - rect.top - rect.height / 2) * 0.3;
+        const x = (e.clientX - rect.left - rect.width / 2) * 0.4;
+        const y = (e.clientY - rect.top - rect.height / 2) * 0.4;
         btn.style.transform = `translate(${x}px, ${y}px)`;
       });
       btn.addEventListener('mouseleave', () => {

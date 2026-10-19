@@ -64,6 +64,14 @@ function initTestimonials() {
     currentIndex = ((index % total) + total) % total;
     track.style.transform = `translateX(-${currentIndex * 100}%)`;
 
+    /* La tarjeta activa se enfoca; las demás pierden opacidad y blur
+       para dar sensación de profundidad al cambiar. */
+    slides.forEach((slide, i) => {
+      const activo = i === currentIndex;
+      slide.classList.toggle('testimonial--active', activo);
+      slide.setAttribute('aria-hidden', activo ? 'false' : 'true');
+    });
+
     if (dotsContainer) {
       const dots = dotsContainer.querySelectorAll('.testimonials__dot');
       dots.forEach((dot, i) => {
@@ -122,7 +130,10 @@ function initTestimonials() {
 
   track.addEventListener('mouseenter', stopAutoplay, { passive: true });
   track.addEventListener('mouseleave', startAutoplay, { passive: true });
+  track.addEventListener('focusin', stopAutoplay, { passive: true });
+  track.addEventListener('focusout', startAutoplay, { passive: true });
 
+  goTo(0);
   startAutoplay();
 }
 
@@ -233,8 +244,11 @@ function initFormValidation() {
       if (res.ok) {
         if (statusEl) {
           statusEl.className = 'form__status form__status--visible form__status--success';
-          statusEl.textContent = '¡Solicitud enviada con éxito! Te contactaremos pronto.';
+          statusEl.innerHTML = '¡Solicitud enviada con éxito! Te contactaremos pronto. ' +
+            '<a href="https://wa.me/573147781700?text=Hola%2C%20acabo%20de%20enviar%20el%20formulario%20y%20quiero%20respuesta%20inmediata" ' +
+            'target="_blank" rel="noopener">¿Quieres respuesta inmediata? Escríbenos por WhatsApp</a>';
         }
+        document.dispatchEvent(new CustomEvent('formulario:enviado'));
         form.reset();
         fields.forEach((f) => {
           f.classList.remove('form__input--error', 'form__textarea--error', 'form__select--error');
@@ -300,17 +314,10 @@ function initSmoothScroll() {
 
 /* ══ COTIZADOR AUTOMÁTICO ══ */
 
-const PRECIOS_BASE = {
-  residencial: 80000,
-  comercial: 150000,
-  roedores: 120000,
-  insectos: 90000,
-  preventivo: 60000,
-  certificado: 100000
-};
+const COTIZADOR_WHATSAPP = 'https://wa.me/573147781700?text=';
 
 function initCotizador() {
-  const tipo = document.getElementById('cot-tipo');
+  const tipos = Array.from(document.querySelectorAll('input[name="cot-tipo"]'));
   const metros = document.getElementById('cot-metros');
   const metrosRange = document.getElementById('cot-metros-range');
   const urgente = document.getElementById('cot-urgente');
@@ -320,52 +327,137 @@ function initCotizador() {
   const precioEl = document.getElementById('cot-precio');
   const detalle = document.getElementById('cot-detalle');
   const waBtn = document.getElementById('cot-wa-btn');
+  const estado = document.getElementById('cot-estado');
 
-  if (!tipo || !metros || !calcular) return;
+  if (!tipos.length || !metros || !calcular || !precioEl || !resultado) return;
+
+  const movimientoReducido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let precioMostrado = 0;
+  let animacionPrecio = null;
+
+  function formatear(valor) {
+    return '$' + Math.round(valor).toLocaleString('es-CO');
+  }
 
   function calcPrecio() {
-    const selec = tipo.options[tipo.selectedIndex];
-    const base = selec ? parseInt(selec.dataset.precio) || 0 : 0;
-    const m = parseInt(metros.value) || 100;
+    const selec = tipos.find((tipo) => tipo.checked);
+    const base = selec ? parseInt(selec.dataset.precio, 10) || 0 : 0;
+    const nombre = selec ? (selec.dataset.nombre || selec.value) : 'Sin seleccionar';
+    const m = Math.max(20, Math.min(2000, parseInt(metros.value, 10) || 100));
     const factorMetros = Math.max(1, m / 100);
     const extraUrgente = urgente?.checked ? 30000 : 0;
     const extraGarantia = garantia?.checked ? 25000 : 0;
     const total = Math.round((base * factorMetros) + extraUrgente + extraGarantia);
-    return { total, base, factorMetros, m, extraUrgente, extraGarantia, nombre: selec?.text || 'Sin seleccionar' };
+    return { total, base, factorMetros, m, extraUrgente, extraGarantia, nombre };
   }
 
-  function actualizar() {
-    const data = calcPrecio();
-    if (data.base === 0 || !data.base) {
-      resultado.style.display = 'none';
+  /* Anima el número del precio para que el cambio se sienta vivo.
+     Cancela la animación anterior para que un cambio rápido de servicio
+     no deje un precio viejo escrito en pantalla. */
+  function pintarPrecio(total, animar) {
+    if (animacionPrecio) {
+      animacionPrecio.pause();
+      animacionPrecio = null;
+    }
+
+    if (!animar || movimientoReducido || typeof anime !== 'function' || !precioMostrado) {
+      precioMostrado = total;
+      precioEl.textContent = formatear(total);
       return;
     }
-    resultado.style.display = 'flex';
-    precioEl.textContent = '$' + data.total.toLocaleString('es-CO');
-    detalle.innerHTML = `
-      <div>${data.nombre}</div>
-      <div>${data.m} m² x $${data.base.toLocaleString('es-CO')}/100m²</div>
-      ${data.extraUrgente ? '<div>+ Servicio urgente: $30,000</div>' : ''}
-      ${data.extraGarantia ? '<div>+ Garantía extendida: $25,000</div>' : ''}
-    `;
-    const msg = encodeURIComponent(
-      `Hola! Quiero una cotización:%0A` +
-      `Servicio: ${data.nombre}%0A` +
-      `Metros: ${data.m} m²%0A` +
-      `Precio estimado: $${data.total.toLocaleString('es-CO')}%0A` +
-      `${data.extraUrgente ? 'Urgente: Sí%0A' : ''}` +
-      `${data.extraGarantia ? 'Garantía extendida: Sí%0A' : ''}` +
-      `¿Podemos agendar una visita?`
-    );
-    waBtn.href = `https://w.app/fumigacionesmagistral?text=${msg}`;
+
+    const desde = precioMostrado;
+    animacionPrecio = anime({
+      targets: { valor: desde },
+      valor: total,
+      duration: 550,
+      easing: 'easeOutCubic',
+      update: (anim) => {
+        precioEl.textContent = formatear(anim.animations[0].currentValue);
+      },
+      complete: () => {
+        precioMostrado = total;
+        precioEl.textContent = formatear(total);
+        animacionPrecio = null;
+      }
+    });
   }
 
-  tipo.addEventListener('change', actualizar);
-  metros.addEventListener('input', () => { metrosRange.value = metros.value; actualizar(); });
-  metrosRange.addEventListener('input', () => { metros.value = metrosRange.value; actualizar(); });
-  urgente?.addEventListener('change', actualizar);
-  garantia?.addEventListener('change', actualizar);
-  calcular.addEventListener('click', actualizar);
+  function actualizar({ animar = false } = {}) {
+    const data = calcPrecio();
+
+    if (!data.base) {
+      resultado.style.display = 'none';
+      waBtn.href = '#';
+      return;
+    }
+
+    resultado.style.display = 'flex';
+    pintarPrecio(data.total, animar);
+
+    detalle.innerHTML = `
+      <div><strong>${data.nombre}</strong></div>
+      <div>${data.m} m² · base ${formatear(data.base)} por cada 100 m²</div>
+      ${data.extraUrgente ? '<div>+ Urgente hoy: $30.000</div>' : ''}
+      ${data.extraGarantia ? '<div>+ Garantía extendida: $25.000</div>' : ''}
+      <div class="cotizador__nota">Precio estimado. El valor final se confirma con una inspección gratuita.</div>
+    `;
+
+    const lineas = [
+      'Hola, quiero una cotización de fumigación en Cali.',
+      `Servicio: ${data.nombre}`,
+      `Área aproximada: ${data.m} m²`,
+      `Precio estimado: ${formatear(data.total)}`,
+      data.extraUrgente ? 'Atención: urgente para hoy' : '',
+      data.extraGarantia ? 'Incluir garantía extendida' : '',
+      '¿Podemos agendar una visita?'
+    ].filter(Boolean);
+
+    waBtn.href = COTIZADOR_WHATSAPP + encodeURIComponent(lineas.join('\n'));
+  }
+
+  tipos.forEach((tipo) => {
+    tipo.addEventListener('change', () => actualizar({ animar: true }));
+  });
+
+  metros.addEventListener('input', () => {
+    metrosRange.value = metros.value;
+    actualizar();
+  });
+
+  metrosRange.addEventListener('input', () => {
+    metros.value = metrosRange.value;
+    actualizar();
+  });
+
+  urgente?.addEventListener('change', () => actualizar({ animar: true }));
+  garantia?.addEventListener('change', () => actualizar({ animar: true }));
+
+  calcular.addEventListener('click', () => {
+    const data = calcPrecio();
+
+    if (!data.base) {
+      if (estado) estado.textContent = 'Selecciona un servicio para calcular tu cotización.';
+      return;
+    }
+
+    actualizar({ animar: true });
+    resultado.classList.add('cotizador__resultado--ready');
+
+    if (estado) {
+      estado.textContent = '¡Listo! Abrimos WhatsApp con tu cotización en un clic.';
+    }
+
+    document.dispatchEvent(new CustomEvent('cotizador:calcular', { detail: data }));
+
+    /* Abre WhatsApp desde el gesto del usuario. Si el navegador lo bloquea,
+       el botón verde de abajo sigue funcionando como respaldo. */
+    window.setTimeout(() => {
+      window.open(waBtn.href, '_blank', 'noopener');
+    }, movimientoReducido ? 80 : 450);
+  });
+
+  actualizar();
 }
 
 /* ══ GALERÍA Y LIGHTBOX ══ */
@@ -382,28 +474,34 @@ function initGaleria() {
 
   if (!items.length) return;
 
-  /**
-   * @description Desvanece un elemento usando anime.js si está disponible
-   */
-  function fade(el, from, to, done) {
-    if (typeof anime === 'function') {
-      anime({
-        targets: el,
-        opacity: [from, to],
-        duration: to ? 380 : 220,
-        easing: 'easeOutQuad',
-        complete: done
-      });
-    } else {
-      el.style.opacity = to;
-      if (done) done();
-    }
-  }
-
   function pausarVideo(item) {
     const v = item.querySelector('.galeria__video');
     if (v && !v.paused) v.pause();
     item.classList.remove('is-playing');
+  }
+
+  /* Los posters de los videos pesan ~120 KB y están bajo el pliegue:
+     se asignan solo cuando el usuario se acerca a la galería. */
+  const videosConPoster = Array.from(document.querySelectorAll('video[data-poster]'));
+  if (videosConPoster.length) {
+    const cargarPoster = (video) => {
+      if (!video.dataset.poster) return;
+      video.poster = video.dataset.poster;
+      video.removeAttribute('data-poster');
+    };
+
+    if ('IntersectionObserver' in window) {
+      const obsPoster = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          cargarPoster(entry.target);
+          obsPoster.unobserve(entry.target);
+        });
+      }, { rootMargin: '400px 0px' });
+      videosConPoster.forEach((video) => obsPoster.observe(video));
+    } else {
+      videosConPoster.forEach(cargarPoster);
+    }
   }
 
   /* ── Filtros por categoría ── */
@@ -415,16 +513,48 @@ function initGaleria() {
         b.classList.toggle('galeria__filter-btn--active', activo);
         b.setAttribute('aria-pressed', activo ? 'true' : 'false');
       });
+      const visibles = [];
+
       items.forEach(item => {
         const visible = filter === 'all' || item.dataset.categoria === filter;
         if (visible) {
           item.style.display = '';
-          fade(item, 0, 1);
+          visibles.push(item);
         } else {
           pausarVideo(item);
-          fade(item, 1, 0, () => { item.style.display = 'none'; });
+          item.style.display = 'none';
         }
       });
+
+      const movimientoReducido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (typeof anime === 'function' && !movimientoReducido) {
+        anime.remove(visibles);
+        visibles.forEach(item => {
+          item.style.opacity = '0';
+          item.style.transform = 'translateY(14px) scale(0.94)';
+        });
+        anime({
+          targets: visibles,
+          opacity: [0, 1],
+          translateY: [14, 0],
+          scale: [0.94, 1],
+          duration: 520,
+          delay: anime.stagger(50),
+          easing: 'easeOutCubic',
+          complete: () => {
+            visibles.forEach(item => {
+              item.style.opacity = '';
+              item.style.transform = '';
+            });
+          }
+        });
+      } else {
+        visibles.forEach(item => {
+          item.style.opacity = '';
+          item.style.transform = '';
+        });
+      }
     });
   });
 
@@ -511,6 +641,45 @@ function initGaleria() {
   lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
 }
 
+/* ══ WHATSAPP CONTEXTUAL ══ */
+
+/**
+ * @description Cambia el mensaje pre-armado del botón flotante según la
+ * sección que el usuario está viendo. Cada sección declara su mensaje en
+ * el atributo data-wa-msg.
+ */
+function initContextualWhatsApp() {
+  const flotante = document.querySelector('.whatsapp-float');
+  const movil = document.querySelector('.mobile-cta__btn--wa');
+  const secciones = document.querySelectorAll('[data-wa-msg]');
+
+  if ((!flotante && !movil) || !secciones.length) return;
+
+  const base = 'https://wa.me/573147781700?text=';
+  let mensajeActual = '';
+
+  function aplicar(mensaje) {
+    if (!mensaje || mensaje === mensajeActual) return;
+    mensajeActual = mensaje;
+    const url = base + encodeURIComponent(mensaje);
+    if (flotante) flotante.href = url;
+    if (movil) movil.href = url;
+  }
+
+  if (!('IntersectionObserver' in window)) {
+    aplicar(secciones[0].dataset.waMsg);
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) aplicar(entry.target.dataset.waMsg);
+    });
+  }, { rootMargin: '-35% 0px -55% 0px', threshold: 0 });
+
+  secciones.forEach((seccion) => observer.observe(seccion));
+}
+
 /* ══ INIT ══ */
 
 /**
@@ -524,6 +693,7 @@ function init() {
   initSmoothScroll();
   initCotizador();
   initGaleria();
+  initContextualWhatsApp();
 
   if (typeof initAnimations === 'function') {
     const revealContent = () => {
@@ -554,9 +724,9 @@ function init() {
     const loader = document.getElementById('pageLoader');
     if (loader) {
       loader.classList.add('hidden');
-      setTimeout(() => loader.remove(), 600);
+      setTimeout(() => loader.remove(), 520);
     }
-  }, 650);
+  }, 300);
 }
 
 document.addEventListener('DOMContentLoaded', init);

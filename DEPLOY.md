@@ -107,3 +107,17 @@ URL de github.io. Cuando lo tengas:
 - **Formspree.** El formulario de `contact.html` envía a
   `https://formspree.io/f/xqapwewq`. Verifica que esa cuenta esté activa y que
   los correos lleguen.
+
+---
+
+## 6. Cach? y headers
+
+Los CSS/JS/im?genes usan `?v=7`. **Cada vez que cambies `style.css` o un
+`.js`, sube el n?mero de versi?n** en los HTML para que los navegadores no
+sigan usando la copia vieja.
+
+El archivo `_headers` solo lo aplica Netlify. En GitHub Pages se ignora y la
+renovaci?n depende del `?v=N`. Si alg?n d?a migras a Netlify, ya quedan
+definidos cach? larga para assets y `must-revalidate` para HTML. La fuente
+`fonts/inter-latin-var.woff2` tambi?n se cachea como asset inmutable. La fuente
+`fonts/inter-latin-var.woff2` tambi?n se cachea como asset inmutable.

@@ -18,6 +18,7 @@
       this.running = false;
       this.visible = true;
       this.rafId = null;
+      this.lastFrame = 0;
 
       this.resize();
       this.init();
@@ -49,8 +50,8 @@
     // Menos partículas en pantallas pequeñas
     get count() {
       const w = window.innerWidth;
-      if (w < 640) return 22;
-      if (w < 1024) return 38;
+      if (w < 640) return 16;
+      if (w < 1024) return 30;
       return 55;
     }
 
@@ -99,6 +100,17 @@
 
     loop() {
       if (!this.running) return;
+
+      /* En móvil dibujamos a 30 fps en vez de 60: la niebla es sutil y
+         así liberamos la mitad del trabajo de CPU por frame. */
+      const interval = window.innerWidth < 768 ? 33 : 16;
+      const now = performance.now();
+      if (now - this.lastFrame < interval) {
+        this.rafId = requestAnimationFrame(() => this.loop());
+        return;
+      }
+      this.lastFrame = now;
+
       const { ctx } = this;
       ctx.clearRect(0, 0, this.w, this.h);
 
