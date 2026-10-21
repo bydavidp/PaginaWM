@@ -2,7 +2,8 @@
 """Auditoría estática del sitio: etiquetas balanceadas, IDs duplicados y
 referencias locales rotas. No requiere dependencias externas.
 
-Uso:  python tools/audit-html.py
+Uso:  python tools/audit-html.py [directorio]
+      (por defecto revisa la raíz del proyecto; acepta dist/ para el build)
 Salida: lista de problemas; código de salida 1 si encuentra alguno.
 """
 from __future__ import annotations
@@ -93,7 +94,8 @@ def is_local(ref: str) -> bool:
 
 
 def main() -> int:
-    pages = sorted(ROOT.glob("*.html"))
+    base = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else ROOT
+    pages = sorted(base.glob("*.html"))
     problems: list[str] = []
 
     for page in pages:

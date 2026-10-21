@@ -1,0 +1,29 @@
+{
+  "name": "fumigaciones-magistrales-del-valle",
+  "version": "1.1.0",
+  "description": "Sitio web de Fumigaciones Magistrales Del Valle - Control de plagas en Cali",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node tools/serve.mjs",
+    "build": "node tools/build.mjs",
+    "preview": "node tools/serve.mjs dist",
+    "check": "node tools/check-links.mjs",
+    "check:dist": "node tools/check-links.mjs dist",
+    "audit": "python tools/audit-html.py",
+    "audit:dist": "python tools/audit-html.py dist",
+    "faq": "node tools/add-faq-schema.mjs",
+    "generate": "node tools/generar-servicios.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2"
+  },
+  "keywords": [
+    "fumigacion",
+    "control-de-plagas",
+    "cali",
+    "colombia"
+  ],
+  "author": "Fumigaciones Magistrales Del Valle",
+  "license": "Private"
+}

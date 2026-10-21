@@ -1,1 +1,10 @@
+# Dependencias y artefactos de build
+node_modules/
+dist/
+
+# Editor y sistema operativo
 .vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log

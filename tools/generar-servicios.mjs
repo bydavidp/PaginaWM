@@ -1,8 +1,9 @@
-const fs = require('fs');
-const path = require('path');
+import { existsSync, writeFileSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const BASE = 'https://bydavidp.github.io/PaginaWM';
-const DIR = path.resolve(__dirname, '..');
+const DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PHONE1 = '573147781700';
 const PHONE2 = '573237994005';
 
@@ -288,7 +289,7 @@ function responsivePicture(src, alt, loading) {
   const thumb = src.replace('/servicios/', '/servicios/thumb/');
   const avif = (url) => url.replace(/\.(jpe?g|png)$/i, '.avif');
   const webp = (url) => url.replace(/\.(jpe?g|png)$/i, '.webp');
-  const thumbAvailable = fs.existsSync(path.join(DIR, thumb));
+  const thumbAvailable = existsSync(path.join(DIR, thumb));
   const priority = loading === 'eager' ? ' fetchpriority="high"' : '';
   const candidates = (format) => thumbAvailable
     ? `${format(thumb)} 1x, ${format(src)} 2x`
@@ -497,7 +498,7 @@ ${FOOTER}
 </body>
 </html>
 `;
-  fs.writeFileSync(path.join(DIR, service.slug), head, 'utf8');
+  writeFileSync(path.join(DIR, service.slug), head, 'utf8');
   console.log('generado:', service.slug);
 }
 

@@ -12,13 +12,20 @@ en sus URL para renovar la caché cuando cambian.
 
 ## 1. Ver el sitio antes de publicar
 
-Abre una terminal en `C:\Users\dpala\PROYECTOS\plagas-site` y corre:
+Abre una terminal en `C:\Users\dpala\PROYECTOS\PaginaWM` y corre:
 
 ```bash
-npx serve .
+npm run dev
 ```
 
-Luego abre la URL que imprime (normalmente http://localhost:3000).
+Luego abre http://localhost:3000.
+
+Para revisar el build minificado (lo que se publicaría si usas `dist/`):
+
+```bash
+npm run build
+npm run preview
+```
 
 > Abrir `index.html` con doble clic también funciona, pero las rutas
 > relativas y el mapa embebido se comportan mejor con servidor local.
@@ -36,7 +43,7 @@ Revisa en el navegador, con las DevTools en modo móvil (F12 → Ctrl+Shift+M):
 ## 2. Subir los cambios
 
 ```bash
-cd C:\Users\dpala\PROYECTOS\plagas-site
+cd C:\Users\dpala\PROYECTOS\PaginaWM
 git add -A
 git commit -m "Rediseño visual, mejoras de conversión y SEO local"
 git push origin master
@@ -110,14 +117,17 @@ URL de github.io. Cuando lo tengas:
 
 ---
 
-## 6. Cach? y headers
+## 6. Caché y headers
 
-Los CSS/JS/im?genes usan `?v=7`. **Cada vez que cambies `style.css` o un
-`.js`, sube el n?mero de versi?n** en los HTML para que los navegadores no
-sigan usando la copia vieja.
+**GitHub Pages publica la raíz del repo**, no `dist/`. En ese caso los HTML
+apuntan a `css/style.css` y `js/*.js` con `?v=8`. Si cambias `style.css` o
+cualquier `.js`, sube el número en todos los HTML (`?v=9`) para que los
+navegadores no sigan usando la copia vieja.
+
+Si publicas el build (`dist/`), no tienes que tocar nada a mano: `npm run build`
+calcula un hash del contenido y lo aplica a todas las referencias.
 
 El archivo `_headers` solo lo aplica Netlify. En GitHub Pages se ignora y la
-renovaci?n depende del `?v=N`. Si alg?n d?a migras a Netlify, ya quedan
-definidos cach? larga para assets y `must-revalidate` para HTML. La fuente
-`fonts/inter-latin-var.woff2` tambi?n se cachea como asset inmutable. La fuente
-`fonts/inter-latin-var.woff2` tambi?n se cachea como asset inmutable.
+renovación depende del `?v=N`. Si algún día migras a Netlify, ya quedan
+definidos caché larga para assets y `must-revalidate` para HTML. La fuente
+`fonts/inter-latin-var.woff2` también se cachea como asset inmutable.

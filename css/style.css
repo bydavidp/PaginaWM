@@ -1570,6 +1570,17 @@ input, textarea, select { font-family: inherit; font-size: inherit; color: inher
 .form__error { font-size: var(--text-xs); color: var(--color-red); font-weight: 600; display: none; }
 .form__error--visible { display: block; }
 
+/* Campo trampa para bots: invisible para personas y lectores de pantalla. */
+.form__honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .form__textarea { min-height: 130px; resize: vertical; }
 .form__row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 

@@ -43,36 +43,53 @@ PaginaWM/
 │   ├── animations.js                   # Motor de animaciones (Anime.js + IntersectionObserver)
 │   ├── particles.js                    # Niebla de fumigación y partículas del hero
 │   ├── anime-loader.js                 # Carga Anime.js durante tiempo ocioso
-│   └── script.js                       # Menú, testimonios, formulario, cotizador, galería
+│   ├── script.js                       # Menú, testimonios, formulario, cotizador, galería
+│   ├── config.js                       # ID de GA4 y datos de contacto
+│   ├── analytics.js                    # Eventos de conversión (WhatsApp, cotizador, formulario)
+│   └── vendor/anime.min.js             # Anime.js 3.2.1 autoalojado
 │
 ├── tools/
-│   └── generar-servicios.js           # Generador de las 7 páginas de servicio
+│   ├── build.mjs                       # Build: minifica con esbuild y genera dist/
+│   ├── serve.mjs                       # Servidor local para dev y preview
+│   ├── check-links.mjs                 # Verifica enlaces y assets locales
+│   ├── audit-html.py                   # Etiquetas, IDs duplicados y refs locales
+│   ├── add-faq-schema.mjs              # FAQ Schema (idempotente)
+│   └── generar-servicios.mjs           # Generador de las 7 páginas de servicio
 │
 ├── img/                                # Fotos reales, variantes AVIF/WebP, videos y favicons
+├── fonts/                              # Inter variable autoalojada
 ├── favicon.ico                         # Favicon multi-tamaño con el logo
 ├── sitemap.xml                         # Las 11 URLs del sitio
 ├── robots.txt                          # Apunta al sitemap
+├── package.json                        # Scripts de desarrollo y build (esbuild)
+├── .nojekyll                           # Evita el procesado Jekyll en GitHub Pages
 ├── DEPLOY.md                           # Guía de despliegue
 └── README.md
 ```
 
-> Las 7 páginas de servicio se generan con `tools/generar-servicios.js`
+> Las 7 páginas de servicio se generan con `tools/generar-servicios.mjs`
 > (plantilla común: schema Service + FAQPage + BreadcrumbList, fotos reales,
 > FAQ específica y CTA de WhatsApp por servicio). Se ejecuta con:
-> `node tools/generar-servicios.js`
+> `npm run generate`
 
 ---
 
 ## 🚀 Inicio rápido
 
-No requiere dependencias ni servidor especial. Abrir cualquier `*.html` desde el navegador funciona correctamente.
+El sitio publicado es HTML estático y funciona abriendo cualquier `*.html`. Para
+desarrollo local con servidor (recomendado):
 
 ```bash
-# Opción recomendada: servidor local para rutas limpias
-npx serve .
+npm install        # solo la primera vez (instala esbuild)
+npm run dev        # http://localhost:3000
+```
 
-# O alternativamente
-python -m http.server 8000
+Para generar la versión minificada de producción:
+
+```bash
+npm run build      # minifica CSS/JS y deja todo en dist/
+npm run preview    # sirve dist/ en http://localhost:3000
+npm run check:dist # verifica que no falte ningún asset en el build
 ```
 
 ---
@@ -88,6 +105,7 @@ python -m http.server 8000
 | Tipografía | Inter variable autoalojada (woff2) |
 | Formulario | Formspree con validación client-side |
 | Mapas | Google Maps Embed (iframe) |
+| Build | esbuild (minificación CSS/JS a `dist/`) |
 | Hosting | GitHub Pages |
 
 ---
@@ -178,11 +196,11 @@ sin movimiento.
 | Colores y tokens | Variables `:root` en `css/style.css` |
 | Números de WhatsApp y teléfono | Enlaces `wa.me/…` y `tel:…` en los HTML (todos los archivos) |
 | Precios del cotizador | `data-precio` de los radios en `index.html`; extras en `js/script.js` |
-| Textos de las páginas de servicio | `tools/generar-servicios.js` (y regenerar con `node tools/generar-servicios.js`) |
+| Textos de las páginas de servicio | `tools/generar-servicios.mjs` (y regenerar con `npm run generate`) |
 | Acción del formulario | Atributo `action=""` en `contact.html` |
 | Textos del hero | Sección `.hero` en `index.html` |
 | Sitemap | `sitemap.xml` (agregar la URL de cada página nueva) |
-| Versión de caché CSS/JS | `?v=N` en los `<link>` y `<script>` de cada HTML |
+| Versión de caché CSS/JS | `?v=N` en los `<link>` y `<script>` de cada HTML (el build de `dist/` lo calcula solo) |
 
 ---
 
@@ -221,6 +239,27 @@ particles.js
 - Lightbox operable con flechas y Escape
 - Touch targets ≥ 44px
 - `prefers-reduced-motion` respetado en media query
+
+---
+
+## 🧪 Build y verificación
+
+El código fuente (raíz del repo) se mantiene legible: los HTML apuntan a
+`css/style.css` y `js/*.js`. El build no modifica el fuente, solo escribe en
+`dist/`.
+
+| Comando | Qué hace |
+|---------|----------|
+| `npm run dev` | Servidor local en `localhost:3000` sobre la raíz |
+| `npm run build` | Minifica CSS/JS con esbuild y copia el sitio a `dist/` |
+| `npm run preview` | Sirve `dist/` para revisar el resultado real |
+| `npm run check` | Verifica que todo `href`/`src` local exista |
+| `npm run audit` | Balance de etiquetas, IDs duplicados y refs (Python) |
+| `npm run check:dist` / `audit:dist` | Lo mismo, sobre el build |
+
+El build calcula un hash de contenido (`?v=xxxxxxxx`) y lo aplica a todas las
+referencias, incluida la del `vendor/anime.min.js` que carga `anime-loader.js`,
+así que no hay que subir versiones a mano en `dist/`.
 
 ---
 

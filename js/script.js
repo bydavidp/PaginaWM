@@ -192,7 +192,8 @@ function initFormValidation() {
   const form = document.querySelector('.form');
   if (!form) return;
 
-  const fields = form.querySelectorAll('input, textarea, select');
+  /* El honeypot queda fuera de la validación: está oculto y no es un campo real. */
+  const fields = form.querySelectorAll('input:not([name="_gotcha"]), textarea, select');
 
   fields.forEach((field) => {
     field.addEventListener('blur', () => validateField(field));
@@ -207,6 +208,20 @@ function initFormValidation() {
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    const statusEl = form.querySelector('.form__status');
+    const submitBtn = form.querySelector('.form__submit');
+
+    /* Honeypot anti-spam: solo un bot rellena este campo oculto. */
+    const honeyField = form.querySelector('input[name="_gotcha"]');
+    if (honeyField && honeyField.value.trim() !== '') {
+      if (statusEl) {
+        statusEl.className = 'form__status form__status--visible form__status--error';
+        statusEl.textContent = 'Error al enviar. Intenta de nuevo.';
+      }
+      return;
+    }
+
     let allValid = true;
 
     fields.forEach((field) => {
@@ -214,9 +229,6 @@ function initFormValidation() {
         allValid = false;
       }
     });
-
-    const statusEl = form.querySelector('.form__status');
-    const submitBtn = form.querySelector('.form__submit');
 
     if (!allValid) {
       const firstError = form.querySelector('.form__input--error, .form__textarea--error, .form__select--error');

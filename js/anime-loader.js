@@ -10,7 +10,7 @@
 
   function loadAnime() {
     const script = document.createElement('script');
-    script.src = 'js/vendor/anime.min.js?v=7';
+    script.src = 'js/vendor/anime.min.js?v=8';
     script.async = true;
     script.onload = () => {
       window.animeLoadState = 'loaded';
