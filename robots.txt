@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://fumimagistral.netlify.app/sitemap.xml
+Sitemap: https://fumimagistral.xyz/sitemap.xml

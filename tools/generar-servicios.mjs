@@ -2,7 +2,7 @@ import { existsSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const BASE = 'https://fumimagistral.netlify.app';
+const BASE = 'https://fumimagistral.xyz';
 const DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PHONE1 = '573147781700';
 const PHONE2 = '573237994005';
