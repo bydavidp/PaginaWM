@@ -106,7 +106,6 @@ URL de netlify.app. Cuando lo tengas:
 - **Precios del cotizador.** Están en `index.html`, en los `data-precio` del
   `<select id="cot-tipo">`, y los extras en el mismo bloque. Confirma que sigan
   vigentes.
-- **Términos y condiciones.** El aviso de privacidad ya existe (`privacidad.html`); falta una página de términos.
 - **Formspree.** El formulario de `contact.html` envía a
   `https://formspree.io/f/xqapwewq`. Verifica que esa cuenta esté activa y que
   los correos lleguen.
