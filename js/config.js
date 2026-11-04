@@ -5,6 +5,6 @@
    y solo deja los eventos en window.dataLayer.
    ═══════════════════════════════════════ */
 window.SITE_CONFIG = {
-  gaId: '', // Ejemplo: 'G-XXXXXXXXXX'
+  gaId: 'G-DW4RDN6810',
   whatsapp: '573147781700'
 };
