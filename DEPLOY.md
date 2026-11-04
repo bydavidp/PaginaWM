@@ -3,7 +3,8 @@
 El repo ya está en GitHub (`bydavidp/PaginaWM`, rama `master`) y el sitio es
 HTML estático, así que no hace falta build ni servidor.
 
-URL final: **https://bydavidp.github.io/PaginaWM/**
+URL principal (Netlify): **https://fumimagistral.netlify.app/**
+URL espejo (GitHub Pages): **https://bydavidp.github.io/PaginaWM/**
 
 GitHub Pages no procesa `_headers` de Netlify; los CSS y JS usan parámetros de versión
 en sus URL para renovar la caché cuando cambian.
@@ -64,7 +65,7 @@ git push origin master
 
 **Google Search Console** — https://search.google.com/search-console
 
-1. Añade la propiedad `https://bydavidp.github.io/PaginaWM/` (tipo "Prefijo de URL").
+1. Añade la propiedad `https://fumimagistral.netlify.app/` (tipo "Prefijo de URL").
 2. Verifica con el método de etiqueta HTML: te dará un `<meta name="google-site-verification" ...>` para pegar en el `<head>` de `index.html`.
 3. En **Sitemaps**, envía `sitemap.xml`.
 
@@ -81,25 +82,20 @@ antes de `</head>` en las cuatro páginas.
 
 ## 5. Cuando compres el dominio propio
 
-Un dominio propio (`fumigacionesmagistralesdelvalle.com`) da mucha más confianza que una
-URL de github.io. Cuando lo tengas:
+Un dominio propio (por ejemplo `fumimagistral.xyz`) da mucha más confianza que una
+URL de netlify.app. Cuando lo tengas:
 
-1. Crea un archivo `CNAME` en la raíz del repo con una sola línea:
-   ```
-   www.fumigacionesmagistralesdelvalle.com
-   ```
-2. En tu proveedor de dominio, crea un registro `CNAME` de `www` →
-   `bydavidp.github.io`.
-3. En Settings → Pages, pon el dominio en **Custom domain** y marca
-   **Enforce HTTPS**.
-4. Reemplaza `https://bydavidp.github.io/PaginaWM/` por
-   `https://www.fumigacionesmagistralesdelvalle.com/` en:
-   - `index.html`, `services.html`, `about.html`, `contact.html`
-     (canonical, `og:url`, `og:image` y los bloques `application/ld+json`)
+1. En Netlify entra a **Domain settings → Add a domain** y agrega el dominio.
+   Netlify te indica los registros DNS que debes crear (apex `A`/`ALIAS` y `www` `CNAME`).
+2. En tu proveedor de dominio, crea esos registros apuntando a Netlify.
+3. Espera el certificado SSL (automático) y marca el dominio como **primario**:
+   Netlify hará una redirección 301 desde `fumimagistral.netlify.app`.
+4. Reemplaza `https://fumimagistral.netlify.app` por `https://tudominio.com` en:
+   - los 12 HTML (canonical, `og:url`, `og:image` y los bloques `application/ld+json`)
    - `sitemap.xml`
    - `robots.txt`
+   - `tools/generar-servicios.mjs` (constante `BASE`)
 5. Vuelve a enviar el sitemap en Search Console con la propiedad nueva.
-
 ---
 
 ## Pendientes de contenido
@@ -110,7 +106,7 @@ URL de github.io. Cuando lo tengas:
 - **Precios del cotizador.** Están en `index.html`, en los `data-precio` del
   `<select id="cot-tipo">`, y los extras en el mismo bloque. Confirma que sigan
   vigentes.
-- **Aviso de privacidad y términos.** Los enlaces del footer apuntan a `#`.
+- **Términos y condiciones.** El aviso de privacidad ya existe (`privacidad.html`); falta una página de términos.
 - **Formspree.** El formulario de `contact.html` envía a
   `https://formspree.io/f/xqapwewq`. Verifica que esa cuenta esté activa y que
   los correos lleguen.

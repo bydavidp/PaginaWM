@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://bydavidp.github.io/PaginaWM/sitemap.xml
+Sitemap: https://fumimagistral.netlify.app/sitemap.xml

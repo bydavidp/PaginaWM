@@ -2,7 +2,7 @@ import { existsSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const BASE = 'https://bydavidp.github.io/PaginaWM';
+const BASE = 'https://fumimagistral.netlify.app';
 const DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PHONE1 = '573147781700';
 const PHONE2 = '573237994005';
@@ -140,7 +140,7 @@ const FOOTER = `  <!-- ═══ FOOTER ═══ -->
       <div class="footer__bottom">
         <p class="footer__copyright">&copy; 2026 Fumigaciones Magistrales Del Valle. Todos los derechos reservados.</p>
         <div class="footer__legal">
-          <a href="#" class="footer__legal-link">Aviso de Privacidad</a>
+          <a href="privacidad.html" class="footer__legal-link">Aviso de Privacidad</a>
           <a href="#" class="footer__legal-link">Términos y Condiciones</a>
         </div>
       </div>

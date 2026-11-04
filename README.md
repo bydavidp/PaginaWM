@@ -2,7 +2,7 @@
 
 > Sitio web premium para empresa de fumigación y control de plagas en Santiago de Cali.
 >
-> **Sitio en vivo:** https://bydavidp.github.io/PaginaWM/
+> **Sitio en vivo:** https://fumimagistral.netlify.app/
 
 <p align="left">
   <img alt="Estado" src="https://img.shields.io/badge/status-en%20producción-success?style=flat-square" />
