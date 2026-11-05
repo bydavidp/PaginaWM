@@ -2977,3 +2977,45 @@ div[id="cotizador"] {
 @media (prefers-reduced-motion:reduce){
   .exit-modal,.exit-modal__card,.exit-modal__cta{animation:none;transition:none;}
 }
+/* ═══════════════════════════════════════
+   39. LOGO OFICIAL DE LA EMPRESA (img/Logo Negro.png)
+   El logo es negro: sobre los fondos oscuros del sitio (navbar, loader,
+   footer) se monta en una tarjeta blanca redondeada para que se vea
+   nítido e integrado, con el brillo rojo característico de la marca. ═══ */
+.logo-chip{
+  display:inline-grid;
+  place-items:center;
+  flex-shrink:0;
+  background:var(--color-white);
+  border-radius:11px;
+  box-shadow:0 2px 10px rgba(225,29,46,0.35), inset 0 0 0 1px rgba(11,14,20,0.06);
+  overflow:hidden;
+}
+.logo-chip img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+  padding:3px;
+}
+.nav__logo .logo-chip{
+  width:42px;
+  height:42px;
+  filter:drop-shadow(0 2px 10px rgba(225,29,46,0.45));
+  transition:transform var(--transition-fast);
+}
+.nav__logo:hover .logo-chip{ transform:scale(1.06); }
+.page-loader .logo-chip{
+  width:76px;
+  height:76px;
+  border-radius:16px;
+}
+.page-loader .logo-chip img{ padding:5px; }
+.footer__logo .logo-chip{
+  width:40px;
+  height:40px;
+  filter:drop-shadow(0 2px 10px rgba(225,29,46,0.30));
+}
+@media (max-width:767px){
+  .nav__logo .logo-chip{ width:38px; height:38px; }
+}
